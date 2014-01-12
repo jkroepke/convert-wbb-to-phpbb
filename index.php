@@ -224,14 +224,14 @@ while($wbbAttachment = $wbbAttachments->fetch_assoc())
         'mimetype'          => $wbbAttachment['fileType'],
         'filesize'          => $wbbAttachment['attachmentsSize'],
         'filetime'          => $wbbAttachment['uploadTime'],
-        'thumbnail'         => ,
         'poster_id'         => $wbbAttachment['userID'],
+        'physical_filename' => $wbbAttachment['userID']."_".md5(uniqueid())
     );
 
     $phpbbDb->query("INSERT INTO {$phpbbMySQLConnection['prefix']}attachments
         (physical_filename, attach_comment, real_filename, extension, mimetype, filesize, filetime, thumbnail, is_orphan, in_message, poster_id)
     VALUES
-        ('2_982cffcb409aa58049f86fbc832647a7', '', '1.jpg', 'jpg', 'image/jpeg', 26540, 1389547101, 0, 1, 0, '2')
+        ('{$phpBBAttachment['physical_filename']}', '', '{$phpBBAttachment['real_filename']}', '{$phpBBAttachment['extension']}', '{$phpBBAttachment['mimetype']}', {$phpBBAttachment['filesize']}, {$phpBBAttachment['filetime']}, 0, 1, 0, {$phpBBAttachment['poster_id']})
     ;");
 
 }
