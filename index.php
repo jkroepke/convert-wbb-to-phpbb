@@ -219,20 +219,29 @@ while($wbbAttachment = $wbbAttachments->fetch_assoc())
 {
     $phpBBAttachment = array(
         'attachmentID'      => $wbbAttachment['attachmentID'],
+        'post_msg_id'       => $wbbAttachment['containerID'],
+        'in_message'        => ($wbbAttachment['containerType'] == 'pm' ? 1 : 0),
+        'poster_id'         => $wbbAttachment['userID'],
+        'physical_filename' => $wbbAttachment['userID']."_".md5(uniqueid()),
         'real_filename'     => $wbbAttachment['attachmentName'],
+        'download_count'    => $wbbAttachment['downloads'],
         'extension'         => substr(strrchr($wbbAttachment['attachmentName'],'.'),1),
         'mimetype'          => $wbbAttachment['fileType'],
         'filesize'          => $wbbAttachment['attachmentsSize'],
-        'filetime'          => $wbbAttachment['uploadTime'],
-        'poster_id'         => $wbbAttachment['userID'],
-        'physical_filename' => $wbbAttachment['userID']."_".md5(uniqueid())
-    );
+        'filetime'          => $wbbAttachment['uploadTime']
+);
 
-    $phpbbDb->query("INSERT INTO {$phpbbMySQLConnection['prefix']}attachments
-        (physical_filename, attach_comment, real_filename, extension, mimetype, filesize, filetime, thumbnail, is_orphan, in_message, poster_id)
-    VALUES
-        ('{$phpBBAttachment['physical_filename']}', '', '{$phpBBAttachment['real_filename']}', '{$phpBBAttachment['extension']}', '{$phpBBAttachment['mimetype']}', {$phpBBAttachment['filesize']}, {$phpBBAttachment['filetime']}, 0, 1, 0, {$phpBBAttachment['poster_id']})
-    ;");
+    $wbbAttachmentPath = $wbbPath.'wcf/attachments/attachment-'.$wbbAttachment['attachmentID'];
+    $phpBBAttachmentPath = $phpBBPath.$phpbbConfig['upload_path'].'/'.$phpBBAttachment['physical_filename'];
+
+    if (copy($wbbAttachmentPath, $phpBBAttachmentPath))
+    {
+        $phpbbDb->query("INSERT INTO {$phpbbMySQLConnection['prefix']}attachments
+            (attach_id, post_msg_id, in_message, poster_id, is_orphan, physical_filename, real_filename, download_count, extension, mimetype, filesize, filetime)
+        VALUES
+            ({$phpBBAttachment['attachmentID']}, {$phpBBAttachment['post_msg_id']}, {$phpBBAttachment['in_message']} {$phpBBAttachment['poster_id']}, 0, '{$phpBBAttachment['physical_filename']}', '{$phpBBAttachment['real_filename']}', {$phpBBAttachment['download_count']}, '{$phpBBAttachment['extension']}', '{$phpBBAttachment['mimetype']}', {$phpBBAttachment['filesize']}, {$phpBBAttachment['filetime']})
+        ;");
+    }
 
 }
 
