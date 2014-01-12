@@ -59,11 +59,27 @@ $phpbbConfigResult->close();
 
 // Step 2 - Import User
 
-$wbbUsers	= $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_users
-	INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_users USING userID;");
+$wbbUserOptions	= $wbbDb->query("SELECT optionID,optionName FROM wcf{$wbbMySQLConnection['wbbNum']}_user_option
+	WHERE optionName IN
+	('birthday','aboutMe','enableDaylightSavingTime','timezone','location','homepage','icq','aim','jabber','msn','yim');");
+
+$wbbUserOptionNames = array();
+while($option = $wbbUserOptions->fetch_assoc())
+{
+	$wbbUserOptionNames[$option['optionName']]	= 'userOption'.$option['optionID'];
+}
+
+$wbbUserOptions->close();
+
+$wbbUsers	= $wbbDb->query("SELECT wcfu.*, wbbu.boardLastMarkAllAsReadTime, ".implode(', ', $wbbUserOptionNames)."
+	FROM wcf{$wbbMySQLConnection['wbbNum']}_users wcfu
+	INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_users wbbu USING (userID)
+	INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_user_option_value wbbu USING (userID);");
 
 while($wbbUser = $wbbUsers->fetch_assoc())
 {
+	$userSignature	= convertBBCode($wbbUser['signature']);
+
 	$phpBBUser	= array(
 		'user_id'					=> $wbbUser['userID'] + $lastUserId,
 		'user_type'					=> USER_NORMAL,
@@ -93,12 +109,12 @@ while($wbbUser = $wbbUsers->fetch_assoc())
 		'user_inactive_time'		=> 0,
 		'user_posts'				=> 0,
 		'user_lang'					=> $phpbbConfig['default_lang'],
-		'user_timezone'				=> ,
+		'user_timezone'				=> $phpbbConfig['board_timezone'],
 		'user_dst'					=> $phpbbConfig['board_dst'],
 		'user_dateformat'			=> $phpbbConfig['default_dateformat'],
 		'user_style'				=> $phpbbConfig['default_style'],
-		'user_rank'					=> ,
-		'user_colour'				=> ,
+		'user_rank'					=> 0,
+		'user_colour'				=> '',
 		'user_new_privmsg'			=> 0,
 		'user_unread_privmsg'		=> 0,
 		'user_last_privmsg'			=> 0,
@@ -113,23 +129,18 @@ while($wbbUser = $wbbUsers->fetch_assoc())
 		'user_allow_viewemail'		=> 1,
 		'user_allow_massemail'		=> 1,
 		'user_options'				=> 230271,
-		'user_avatar'				=> ,
-		'user_avatar_type'			=> ,
-		'user_avatar_width'			=> ,
-		'user_avatar_height'		=> ,
-		'user_sig'					=> convertBBCode($wbbUser['signature']),
-		'user_sig_bbcode_uid'		=> ,
-		'user_sig_bbcode_bitfield'	=> ,
-		'user_from'					=> ,
-		'user_icq'					=> ,
-		'user_aim'					=> ,
-		'user_yim'					=> ,
-		'user_msnm'					=> ,
-		'user_jabber'				=> ,
-		'user_website'				=> ,
+		'user_sig'					=> $userSignature['text'],
+		'user_sig_bbcode_uid'		=> $userSignature['uid'],
+		'user_sig_bbcode_bitfield'	=> $userSignature['bitfield'],
+		'user_from'					=> $userSignature[$wbbUserOptionNames['location']],
+		'user_icq'					=> $userSignature[$wbbUserOptionNames['icq']],
+		'user_aim'					=> $userSignature[$wbbUserOptionNames['aim']],
+		'user_yim'					=> $userSignature[$wbbUserOptionNames['yim']],
+		'user_msnm'					=> $userSignature[$wbbUserOptionNames['msn']],
+		'user_jabber'				=> $userSignature[$wbbUserOptionNames['jabber']],
+		'user_website'				=> $userSignature[$wbbUserOptionNames['homepage']],
 		'user_occ'					=> '',
-		'user_interests'			=> ,
-		'user_actkey'				=> '',
+		'user_interests'			=> '',
 		'user_form_salt'			=> unique_id(),
 		'user_new'					=> 0
 	);
@@ -153,6 +164,17 @@ while($wbbUser = $wbbUsers->fetch_assoc())
 
 	$phpbbDb->query("INSERT INTO {$phpbbMySQLConnection['prefix']}user_group (user_id, group_id, user_pending)
 		VALUES ({$phpBBUser['user_id']}, 2, 0)");
+
+	$sql = "INSERT INTO {$phpbbMySQLConnection['prefix']}user SET ";
+
+	foreach($phpBBUser as $key => $value)
+	{
+		$sql	.= "´".$key."´ = '".$phpbbDb->real_escape_string($value)."',";
+	}
+
+	$sql	= substr($sql, 0, -1).';';
+	$phpbbDb->query($sql);
+	echo '.';
 }
 
 $wbbUsers->close();
