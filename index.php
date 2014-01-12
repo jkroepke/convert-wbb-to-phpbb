@@ -156,3 +156,62 @@ while($wbbUser = $wbbUsers->fetch_assoc())
 }
 
 $wbbUsers->close();
+
+
+// Step x - Import Avatars
+
+$wbbAvatars	= $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_user_avatar ORDER BY avatarID ASC;");
+
+while($wbbAvatar = $wbbAvatars->fetch_assoc())
+{
+    $phpBBAvatar = array(
+        'user_id'   => $wbbAvatar['userID'],
+        'height'    => $wbbAvatar['height'],
+        'width'     => $wbbAvatar['width'],
+        'filename'  => $phpbbConfig['avatar_salt']."_".$wbbAvatar['userID'].".".$wbbAvatar['avatarExtension']
+    );
+
+    $wbbAvatarPath = $wbbPath.'wcf/images/avatars/avatar-'.$wbbAvatar['avatarID'].'.'.$wbbAvatar['avatarExtension'];
+    $phpBBAvatarPath = $phpBBPath.$phpbbConfig['avatar_path'].'/'.$phpBBAvatar['filename'];
+
+    if (copy($wbbAvatarPath, $phpBBAvatarPath)){
+        @chmod($phpBBAvatarPath, 0777);
+        $phpbbDb->query("UPDATE {$phpbbMySQLConnection['prefix']}users SET
+            user_avatar_height = {$phpBBAvatar['height']},
+            user_avatar_width = {$phpBBAvatar['width']},
+            user_avatar = '".$phpBBAvatar['filename']."',
+            user_avatar_type = 1
+        WHERE
+            user_id = {$phpBBAvatar['user_id']};");
+    }
+}
+
+$wbbAvatars->close();
+
+
+// Step y - Import Attachments
+
+$wbbAttachments	= $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_user_avatar;");
+
+while($wbbAttachment = $wbbAttachments->fetch_assoc())
+{
+    $phpBBAttachment = array(
+        'attachmentID'      => $wbbAttachment['attachmentID'],
+        'real_filename'     => $wbbAttachment['attachmentName'],
+        'extension'         => substr(strrchr($wbbAttachment['attachmentName'],'.'),1),
+        'mimetype'          => $wbbAttachment['fileType'],
+        'filesize'          => $wbbAttachment['attachmentsSize'],
+        'filetime'          => $wbbAttachment['uploadTime'],
+        'thumbnail'         => ,
+        'poster_id'         => $wbbAttachment['userID'],
+    );
+
+    $phpbbDb->query("INSERT INTO {$phpbbMySQLConnection['prefix']}attachments
+        (physical_filename, attach_comment, real_filename, extension, mimetype, filesize, filetime, thumbnail, is_orphan, in_message, poster_id)
+    VALUES
+        ('2_982cffcb409aa58049f86fbc832647a7', '', '1.jpg', 'jpg', 'image/jpeg', 26540, 1389547101, 0, 1, 0, '2')
+    ;");
+
+}
+
+$wbbAttachment->close();
