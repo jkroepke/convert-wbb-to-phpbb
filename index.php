@@ -1,5 +1,25 @@
 <?php
 
+/**
+ *
+ * WBB 3.1 to php 3.0.12 converter
+ * convert features:
+ * user
+ * user group
+ * user rank
+ * user avatar
+ * TODO: user friends
+ * TODO: user passwords ?
+ * private messages
+ * private message folders
+ * private message attachments
+ * TODO: forums
+ * TODO: topic
+ * TODO: posts
+ * TODO: polls
+ * TODO: bbcodes
+ *
+ */
 define('IN_PHPBB', true);
 
 $wbbMySQLConnection = array(
@@ -10,7 +30,7 @@ $wbbMySQLConnection = array(
 	'wbbNum'	=> '25292',
 );
 
-$wbbPath = '/www/oldwbb/';
+$wbbPath = '';
 
 $phpBBMySQLConnection = array(
 	'host'		=> 'localhost',
@@ -20,41 +40,24 @@ $phpBBMySQLConnection = array(
 	'prefix'	=> 'phpbb_',
 );
 
-function convertBBCode($text)
-{
-	return $text;
-}
-
-function insertData($table, $data)
-{
-	global $phpBBDb, $phpBBMySQLConnection;
-
-	$sql = "INSERT INTO {$phpBBMySQLConnection['prefix']}{$table} SET ";
-
-	foreach($data as $key => $value)
-	{
-		$sql	.= "´".$key."´ = '".$value."',";
-	}
-
-	$sql	= substr($sql, 0, -1).';';
-	$phpBBDb->query($sql);
-}
-
-$phpBBPath = '/www/phpbb/';
+$phpBBPath = '';
 
 $wbbDb		= new mysqli($wbbMySQLConnection['host'], $wbbMySQLConnection['user'], $wbbMySQLConnection['password'], $wbbMySQLConnection['database']);
 $phpBBDb	= new mysqli($phpBBMySQLConnection['host'], $phpBBMySQLConnection['user'], $phpBBMySQLConnection['password'], $phpBBMySQLConnection['database']);
 
-require $phpBBPath."includes/utf/utf_tools.php";
-require $phpBBPath."includes/functions.php";
-require $phpBBPath."includes/constants.php";
+require 'functions.php';
+require $phpBBPath.'includes/utf/utf_tools.php';
+require $phpBBPath.'includes/functions.php';
+require $phpBBPath.'includes/constants.php';
 
 // Step 1 - Prepare phpbb Tables
 echo "\n\nPrepare phpbb Tables...\n";
 
-$rootUser	= $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}_users WHERE user_id = 2;")->fetch_assoc();
-$lastUserId	= reset($phpBBDb->query("SELECT MAX(user_id) FROM {$phpBBMySQLConnection['prefix']}_users;")->fetch_num());
+$rootUser		= $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}_users WHERE user_type = 3;")->fetch_assoc();
+// save all users
+$defaultUsers	= $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}_users WHERE user_type = 2;")->fetch_all();
 
+// delete the admin and demo posts.
 $phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}acl_users;");
 $phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}topics_posted;");
 $phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}topics;");
@@ -64,6 +67,8 @@ $phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}posts;");
 $phpBBDb->query("DELETE FROM {$phpBBMySQLConnection['prefix']}users WHERE user_id = 2;");
 $phpBBDb->query("DELETE FROM {$phpBBMySQLConnection['prefix']}acl_groups WHERE forum_id != 0;");
 
+
+// get the phpbb config.
 $phpBBConfigResult	= $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}config;");
 $phpBBConfig		= array();
 while($configRow = $phpBBConfigResult->fetch_assoc())
@@ -77,6 +82,7 @@ $phpBBConfigResult->close();
 echo "Step 2 - Import User\n";
 $wbbUserIpAddress	= array();
 
+// If the wbb has non dafault optionIDs, we can ask them here.
 $wbbUserOptions	= $wbbDb->query("SELECT optionID,optionName FROM wcf{$wbbMySQLConnection['wbbNum']}_user_option
 	WHERE optionName IN
 	('birthday','aboutMe','enableDaylightSavingTime','timezone','location','homepage','icq','aim','jabber','msn','yim');");
@@ -98,7 +104,7 @@ while($wbbUser = $wbbUsers->fetch_assoc())
 {
 	$userSignature	= convertBBCode($wbbUser['signature']);
 
-	$wbbUserIpAddress[$wbbUser['userID'] + $lastUserId]	= $wbbUser['registrationIpAddress'];
+	$wbbUserIpAddress[$wbbUser['userID']]	= $wbbUser['registrationIpAddress'];
 
 	$birthday = '';
 
@@ -106,14 +112,14 @@ while($wbbUser = $wbbUsers->fetch_assoc())
 	if(!empty($userSignature[$wbbUserOptionNames['birthday']]) && substr($userSignature[$wbbUserOptionNames['birthday']], 0, 4) !== '0000')
 	{
 		$birthday	= sprintf('%2d-%2d-%4d',
-			substr($userSignature[$wbbUserOptionNames['birthday']], 8, 2),
-			substr($userSignature[$wbbUserOptionNames['birthday']], 5, 2),
-			substr($userSignature[$wbbUserOptionNames['birthday']], 0, 4)
+			substr($userSignature[$wbbUserOptionNames['birthday']], 8, 2), // day
+			substr($userSignature[$wbbUserOptionNames['birthday']], 5, 2), // month
+			substr($userSignature[$wbbUserOptionNames['birthday']], 0, 4)  // year
 		);
 	}
 	
 	$phpBBUser	= array(
-		'user_id'					=> $wbbUser['userID'] + $lastUserId,
+		'user_id'					=> $wbbUser['userID'],
 		'user_type'					=> USER_NORMAL,
 		'group_id'					=> 2,
 		'user_permissions'			=> '',
@@ -179,13 +185,18 @@ while($wbbUser = $wbbUsers->fetch_assoc())
 
 	if($wbbUser['email'] == $rootUser['user_email'])
 	{
+		// we found the old admin user. yey
+
 		$phpBBUser['user_type']			= USER_FOUNDER;
 		$phpBBUser['group_id']			= 3;
-		$phpBBUser['user_password']		= $rootUser['user_password'];
 		$phpBBUser['user_rank']			= $rootUser['user_rank'];
 		$phpBBUser['user_colour']		= $rootUser['user_colour'];
 		$phpBBUser['user_pass_convert']	= 0;
 
+		// let them login directly without request a new password.
+		$phpBBUser['user_password']		= $rootUser['user_password'];
+
+		// register the admin as an admin
 		$phpBBAclUser	= array(
 			'user_id'			=> $phpBBUser['user_id'],
 			'forum_id'			=> 0,
@@ -195,21 +206,132 @@ while($wbbUser = $wbbUsers->fetch_assoc())
 		);
 
 		insertData("acl_users", $phpBBAclUser);
+
+		// add the founder to global mod ...
+		$phpBBUserToGroup	= array(
+			'group_id'		=> 4,
+			'user_id'		=> $wbbUser['userID'],
+			'group_leader'	=> 0,
+			'user_pending'	=> 0
+		);
+
+		insertData("user_group", $phpBBUserToGroup);
+
+		// ... and admin group.
+		$phpBBUserToGroup	= array(
+			'group_id'		=> 5,
+			'user_id'		=> $wbbUser['userID'],
+			'group_leader'	=> 1,
+			'user_pending'	=> 0
+		);
+
+		insertData("user_group", $phpBBUserToGroup);
 	}
 
 	insertData("user", $phpBBUser);
+
+	// add user to user group
+	$phpBBUserToGroup	= array(
+		'group_id'		=> 5,
+		'user_id'		=> $wbbUser['userID'],
+		'group_leader'	=> 0,
+		'user_pending'	=> 0
+	);
+
+	insertData("user_group", $phpBBUserToGroup);
 	echo '.';
 }
 
 $wbbUsers->close();
+
+$phpBBDb->query("UPDATE {$phpBBMySQLConnection['prefix']}config SET config_value = '{$wbbUser['userID']}' WHERE config_name = 'newest_user_id';");
+$phpBBDb->query("UPDATE {$phpBBMySQLConnection['prefix']}config SET config_value = '{$phpbbDb->real_escape_string($wbbUser['username'])}' WHERE config_name = 'newest_username';");
+$phpBBDb->query("UPDATE {$phpBBMySQLConnection['prefix']}config SET config_value = (SELECT COUNT(*) FROM {$phpBBMySQLConnection['prefix']}user WHERE user_type IN (".USER_FOUNDER.",".USER_NORMAL.")) WHERE config_name = 'num_users';");
 echo "\n\n";
 
-// Step 3 - Import Pms
-echo "Step 3 - Import PMs\n";
+// Step 3 - Import User Groups
+echo "Import Groups\n";
+// the first six user groups are wbb builtin groups. Just ignore them.
+
+$phpBBLastGroupId	= reset($wbbDb->query("SELECT MAX(group_id) FROM {$phpBBMySQLConnection['prefix']}groups;")->fetch_row());
+
+$wbbUserGroups	= $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_group WHERE groupID > 6;");
+while($wbbUserGroup = $wbbUserGroups->fetch_assoc())
+{
+	// on phpbb ranks and groups are splitted, just create a rank and group on phpbb
+
+	$phpBBUserRank	= array(
+		'rank_title'	=> $wbbUserGroup['groupName'],
+		'rank_special'	=> 1,
+	);
+
+	insertData("ranks", $phpBBUserRank);
+
+	$rankId	= $phpBBDb->insert_id;
+
+	// wbb knows only group types like GROUP_CLOSED
+
+	$groupText	= convertBBCode($wbbUserGroup['groupDescription']);
+
+	$phpBBUserGroup	= array(
+		'group_id'				=> $wbbUserGroup['groupID'] + $phpBBLastGroupId,
+		'group_type'			=> GROUP_CLOSED,
+		'group_founder_manage'	=> 0,
+		'group_skip_auth'		=> 0,
+		'group_name'			=> $wbbUserGroup['groupName'],
+		'group_desc'			=> $groupText['text'],
+		'group_desc_bitfield'	=> $groupText['bitfield'],
+		'group_desc_options'	=> 7,
+		'group_desc_uid'		=> $groupText['uid'],
+		'group_display'			=> $wbbUserGroup['showOnTeamPage'],
+		'group_rank'			=> $rankId,
+	);
+
+	insertData("user_group", $phpBBUserGroup);
+}
+$wbbUserGroups->close();
+
+// Step 4 - Import User rank
+$wbbUserToGroups	= $wbbDb->query("SELECT ug.*,leaderUserID FROM wcf{$wbbMySQLConnection['wbbNum']}_user_to_groups ug
+	LEFT JOIN wcf{$wbbMySQLConnection['wbbNum']}_group_leader gl
+		ON userID = leaderUserID AND ug.groupID = gl.groupID
+	WHERE ug.groupID > 6;");
+
+while($wbbUserToGroup = $wbbUserToGroups->fetch_assoc())
+{
+	$phpBBUserToGroup	= array(
+		'group_id'		=> $wbbUserToGroup['groupID'],
+		'user_id'		=> $wbbUserToGroup['userID'],
+		'group_leader'	=> $wbbUserToGroup['userID'] == $wbbUserToGroup['leaderUserID'],
+		'user_pending'	=> 0
+	);
+
+	insertData("user_group", $phpBBUserToGroup);
+}
+
+$wbbUserToGroups->close();
+
+// Step 5 - Import User rank
+$wbbUserRanks	= $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_user_rank WHERE `rankTitle` NOT LIKE 'wcf.%';");
+
+while($wbbUserRank = $wbbUserRanks->fetch_assoc())
+{
+	$phpBBUserRank	= array(
+		'rank_title'	=> $wbbUserGroup['rankTitle'],
+		'rank_special'	=> 0,
+		'rank_min'		=> $wbbUserGroup['neededPoints'] / 5
+	);
+
+	insertData("ranks", $phpBBUserRank);
+}
+
+$wbbUserRanks->close();
+
+// Step 6 Import Pms
+echo "Import PMs\n";
 
 $wbbPmUser	= array();
 
-$wbbPms		= $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_pm;");
 $wbbPmUsers	= $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_pm_to_user;");
 
 while($pmUser = $wbbPmUsers->fetch_assoc())
@@ -219,12 +341,16 @@ while($pmUser = $wbbPmUsers->fetch_assoc())
 
 $wbbPmUsers->close();
 
+
+$wbbPms		= $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_pm;");
+
 while($wbbPm = $wbbPms->fetch_assoc())
 {
 	if($wbbPm['isDraft'])
 	{
+		// In phpbb, drafts have a own table.
 		$phpDraft	= array(
-			'user_id'		=> $wbbPm['userID'] + $lastUserId,
+			'user_id'		=> $wbbPm['userID'],
 			'topic_id'		=> 0,
 			'forum_id'		=> 0,
 			'save_time'		=> $wbbPm['time'],
@@ -236,35 +362,6 @@ while($wbbPm = $wbbPms->fetch_assoc())
 	}
 	else
 	{
-		$pmText		= convertBBCode($wbbPm['text']);
-
-		$phpBBPM	= array(
-			'msg_id'				=> $wbbPm['pmID'],
-			'root_level'			=> $wbbPm['parentPmID'],
-			'author_id'				=> $wbbPm['userID'] + $lastUserId,
-			'icon_id'				=> 0,
-			'author_ip'				=> $wbbUserIpAddress[$wbbPm['userID'] + $lastUserId],
-			'message_time'			=> $wbbPm['time'],
-			'enable_bbcode'			=> $wbbPm['enableBBCodes'],
-			'enable_smilies'		=> $wbbPm['enableSmilies'],
-			'enable_magic_url'		=> 1,
-			'enable_sig'			=> $wbbPm['showSignature'],
-			'message_subject'		=> $phpBBDb->real_escape_string($wbbPm['subject']),
-			'message_text'			=> $phpBBDb->real_escape_string($pmText['text']),
-			'message_edit_reason'	=> '',
-			'message_edit_user'		=> 0,
-			'message_attachment'	=> 0,
-			'bbcode_bitfield'		=> $pmText['bitfield'],
-			'bbcode_uid'			=> $pmText['uid'],
-			'message_edit_time'		=> 0,
-			'message_edit_count'	=> 0,
-			'to_address'			=> implode(':', $toUser),
-			'bcc_address'			=> implode(':', $bccUser),
-			'message_reported'		=> 0,
-		);
-
-		insertData("privmsgs", $phpBBPM);
-
 		$toUser		= array();
 		$bccUser	= array();
 
@@ -286,8 +383,8 @@ while($wbbPm = $wbbPms->fetch_assoc())
 
 			$pmToUser	= array(
 				'msg_id'		=> $wbbPm['pmID'],
-				'user_id'		=> $pmUser['recipientID'] + $lastUserId,
-				'author_id'		=> $wbbPm['userID'] + $lastUserId,
+				'user_id'		=> $pmUser['recipientID'],
+				'author_id'		=> $wbbPm['userID'],
 				'pm_deleted'	=> (int) $pmUser['isDeleted'] > 0,
 				'pm_new'		=> (int) $pmUser['userWasNotified'] != 0,
 				'pm_unread'		=> (int) $pmUser['isViewed'] != 0,
@@ -300,10 +397,12 @@ while($wbbPm = $wbbPms->fetch_assoc())
 			insertData("privmsgs_to", $pmToUser);
 		}
 
+		// phpBB add the sender to the "to" table, wbb not.
+
 		$pmToUser	= array(
 			'msg_id'		=> $wbbPm['pmID'],
-			'user_id'		=> $wbbPm['userID'] + $lastUserId,
-			'author_id'		=> $wbbPm['userID'] + $lastUserId,
+			'user_id'		=> $wbbPm['userID'],
+			'author_id'		=> $wbbPm['userID'],
 			'pm_deleted'	=> (int) $wbbPm['saveInOutbox'] == 0,
 			'pm_new'		=> 0,
 			'pm_unread'		=> 0,
@@ -314,6 +413,34 @@ while($wbbPm = $wbbPms->fetch_assoc())
 		);
 
 		insertData("privmsgs_to", $pmToUser);
+
+		$pmText		= convertBBCode($wbbPm['text']);
+		$phpBBPM	= array(
+			'msg_id'				=> $wbbPm['pmID'],
+			'root_level'			=> $wbbPm['parentPmID'],
+			'author_id'				=> $wbbPm['userID'],
+			'icon_id'				=> 0,
+			'author_ip'				=> $wbbUserIpAddress[$wbbPm['userID']],
+			'message_time'			=> $wbbPm['time'],
+			'enable_bbcode'			=> $wbbPm['enableBBCodes'],
+			'enable_smilies'		=> $wbbPm['enableSmilies'],
+			'enable_magic_url'		=> 1,
+			'enable_sig'			=> $wbbPm['showSignature'],
+			'message_subject'		=> $phpBBDb->real_escape_string($wbbPm['subject']),
+			'message_text'			=> $phpBBDb->real_escape_string($pmText['text']),
+			'message_edit_reason'	=> '',
+			'message_edit_user'		=> 0,
+			'message_attachment'	=> 0,
+			'bbcode_bitfield'		=> $pmText['bitfield'],
+			'bbcode_uid'			=> $pmText['uid'],
+			'message_edit_time'		=> 0,
+			'message_edit_count'	=> 0,
+			'to_address'			=> implode(':', $toUser),
+			'bcc_address'			=> implode(':', $bccUser),
+			'message_reported'		=> 0,
+		);
+
+		insertData("privmsgs", $phpBBPM);
 	}
 
 	echo '.';
@@ -321,11 +448,11 @@ while($wbbPm = $wbbPms->fetch_assoc())
 
 $wbbPms->close();
 
-// Step 4 - Import Pm Folders
+// Step 7 - Import Pm Folders
 
 $phpBBFoldersCount	= array();
 
-$mysqlFoldersCount	= $phpBBDb->query("SELECT folder_id, COUNT(msg_id) as pm_count FROM `{$phpBBMySQLConnection['prefix']}privmsgs_to` GROUP BY folder_id WHERE folder_id > 0;");
+$mysqlFoldersCount	= $phpBBDb->query("SELECT folder_id, COUNT(msg_id) as pm_count FROM {$phpBBMySQLConnection['prefix']}privmsgs_to GROUP BY folder_id WHERE folder_id > 0;");
 while($folder = $mysqlFoldersCount->fetch_assoc())
 {
 	$phpBBFoldersCount[$folder['folder_id']]	= $folder['pm_count'];
@@ -350,7 +477,7 @@ while($wbbPmFolder = $wbbPmFolders->fetch_assoc())
 
 $wbbPmFolders->close();
 
-// Step x - Import Avatars
+// Step 8 - Import Avatars
 
 //TODO: Tabelle abändern
 $wbbAvatars	= $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_user_avatar;");
@@ -369,6 +496,7 @@ while($wbbAvatar = $wbbAvatars->fetch_assoc())
 
 
 	//TODO: Am anfang des Convert schecken, ob die Pfade less und beschreibar sind.
+	//TODO: phpBB Pfade vielleicht leeren.
 	if(!is_readable($wbbAvatarPath)) continue;
 	if(!is_writeable(dirname($phpBBAvatarPath))) continue;
 
@@ -388,7 +516,7 @@ while($wbbAvatar = $wbbAvatars->fetch_assoc())
 $wbbAvatars->close();
 
 
-// Step y - Import Attachments
+// Step 9 - Import Attachments
 
 $wbbAttachments	= $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_user_avatar;");
 
@@ -408,6 +536,7 @@ while($wbbAttachment = $wbbAttachments->fetch_assoc())
         'filetime'          => $wbbAttachment['uploadTime']
 );
 	//TODO: Am anfang des Convert schecken, ob die Pfade less und beschreibar sind.
+	//TODO: phpBB Pfade vielleicht leeren.
 
     $wbbAttachmentPath = $wbbPath.'wcf/attachments/attachment-'.$wbbAttachment['attachmentID'];
     $phpBBAttachmentPath = $phpBBPath.$phpBBConfig['upload_path'].'/'.$phpBBAttachment['physical_filename'];
