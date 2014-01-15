@@ -1,6 +1,5 @@
 <?php
 
-//TODO: Tabelle abändern
 $wbbAvatars    = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_user_avatar;");
 
 while($wbbAvatar = $wbbAvatars->fetch_assoc())
