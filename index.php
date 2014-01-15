@@ -26,26 +26,24 @@ define('IN_PHPBB', true);
 //TODO: Add command line help
 
 
+require 'functions.php';
+require $phpBBPath.'includes/utf/utf_tools.php';
+require $phpBBPath.'includes/functions.php';
+require $phpBBPath.'includes/constants.php';
+
+
 if(!class_exists('mysqli'))
 {
-    echo 'Extension mysqli is required. Exiting.';
-    exit(1);
+    throw new Exception('Extension mysqli is required. Exiting.');
 }
 
 require 'config.php';
-
 
 $wbbDb   = new mysqli($wbbMySQLConnection['host'], $wbbMySQLConnection['user'],
     $wbbMySQLConnection['password'], $wbbMySQLConnection['database']);
 
 $phpBBDb = new mysqli($phpBBMySQLConnection['host'], $phpBBMySQLConnection['user'],
     $phpBBMySQLConnection['password'], $phpBBMySQLConnection['database']);
-
-
-require 'functions.php';
-require $phpBBPath.'includes/utf/utf_tools.php';
-require $phpBBPath.'includes/functions.php';
-require $phpBBPath.'includes/constants.php';
 
 // get the phpbb config.
 $phpBBConfigResult = $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}config;");
