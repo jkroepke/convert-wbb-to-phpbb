@@ -51,8 +51,12 @@ $phpBBMySQLConnection = array(
 
 $phpBBPath = '';
 
-$wbbDb   = new mysqli($wbbMySQLConnection['host'], $wbbMySQLConnection['user'], $wbbMySQLConnection['password'], $wbbMySQLConnection['database']);
-$phpBBDb = new mysqli($phpBBMySQLConnection['host'], $phpBBMySQLConnection['user'], $phpBBMySQLConnection['password'], $phpBBMySQLConnection['database']);
+$wbbDb   = new mysqli($wbbMySQLConnection['host'], $wbbMySQLConnection['user'],
+    $wbbMySQLConnection['password'], $wbbMySQLConnection['database']);
+
+$phpBBDb = new mysqli($phpBBMySQLConnection['host'], $phpBBMySQLConnection['user'],
+    $phpBBMySQLConnection['password'], $phpBBMySQLConnection['database']);
+
 
 require 'functions.php';
 require $phpBBPath.'includes/utf/utf_tools.php';
