@@ -26,3 +26,20 @@ function insertData($table, $data)
 	$sql	= substr($sql, 0, -1).';';
 	$phpBBDb->query($sql);
 }
+
+function updateData($table, $data, $where = '1=1')
+{
+	global $phpBBDb, $phpBBMySQLConnection;
+
+	$sql = "UPDATE {$phpBBMySQLConnection['prefix']}{$table} SET ";
+
+	foreach($data as $key => $value)
+	{
+		$sql	.= "´".$key."´ = '".$value."',";
+	}
+
+	$sql	= substr($sql, 0, -1).' ';
+	$sql	.= "WHERE {$where};";
+
+	$phpBBDb->query($sql);
+}
