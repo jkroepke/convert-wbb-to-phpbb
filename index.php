@@ -8,7 +8,8 @@
  * user group
  * user rank
  * user avatar
- * TODO: user friends
+ * user friends
+ * user ignore list
  * TODO: user passwords ?
  * private messages
  * private message folders
@@ -80,6 +81,8 @@ $convertProcess = array(
     'user-to-group',
     'user-rank',
     'user-avatar',
+    'user-friends',
+    'user-ignore-list',
     'private-messages',
     'private-messages-folder',
     'attachments'
