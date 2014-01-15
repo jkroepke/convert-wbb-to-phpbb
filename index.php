@@ -75,6 +75,7 @@ $convertProcess = array(
     'user-group',
     'user-to-group',
     'user-rank',
+    'user-avatar',
     'private-messages',
     'private-messages-folder',
     'attachments'
@@ -82,5 +83,13 @@ $convertProcess = array(
 
 foreach($convertProcess as $converterName)
 {
-    require 'converter/'.$converterName.'.php';
+    $converterFile = "converter/{$converterName}.php";
+    if(!file_exists($converterFile))
+    {
+        throw new Exception("Can not load converter {$converterName}!");
+    }
+    else
+    {
+        require $converterFile;
+    }
 }
