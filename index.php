@@ -46,6 +46,16 @@ $phpBBDb = new mysqli($phpBBMySQLConnection['host'], $phpBBMySQLConnection['user
     $phpBBMySQLConnection['password'], $phpBBMySQLConnection['database']);
 
 // get the phpbb config.
+$wbbConfigResult = $phpBBDb->query("SELECT optionName, optionValue FROM wcf{$wbbMySQLConnection['wbbNum']}_option;");
+$wbbConfig       = array();
+while($configRow = $wbbConfigResult->fetch_assoc())
+{
+    $wbbConfig[$configRow['optionName']] = $configRow['optionValue'];
+}
+
+$wbbConfigResult->close();
+
+// get the phpbb config.
 $phpBBConfigResult = $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}config;");
 $phpBBConfig       = array();
 while($configRow = $phpBBConfigResult->fetch_assoc())
