@@ -163,6 +163,20 @@ while($wbbUser = $wbbUsers->fetch_assoc())
 
 $wbbUsers->close();
 
-$phpBBDb->query("UPDATE {$phpBBMySQLConnection['prefix']}config SET config_value = '{$wbbUser['userID']}' WHERE config_name = 'newest_user_id';");
-$phpBBDb->query("UPDATE {$phpBBMySQLConnection['prefix']}config SET config_value = '{$phpbbDb->real_escape_string($wbbUser['username'])}' WHERE config_name = 'newest_username';");
-$phpBBDb->query("UPDATE {$phpBBMySQLConnection['prefix']}config SET config_value = (SELECT COUNT(*) FROM {$phpBBMySQLConnection['prefix']}user WHERE user_type IN (".USER_FOUNDER.",".USER_NORMAL.")) WHERE config_name = 'num_users';");
+$phpBBConfigUpdate  = array(
+    'config_value'  => $wbbUser['userID'],
+);
+
+updateData('config', $phpBBConfigUpdate, "config_name = 'newest_user_id'");
+
+$phpBBConfigUpdate  = array(
+    'config_value'  => $phpbbDb->real_escape_string($wbbUser['username']),
+);
+
+updateData('config', $phpBBConfigUpdate, "config_name = 'newest_username'");
+
+$phpBBDb->query("UPDATE {$phpBBMySQLConnection['prefix']}config SET
+config_value = (
+    SELECT COUNT(*) FROM {$phpBBMySQLConnection['prefix']}user
+    WHERE user_type IN (".USER_FOUNDER.",".USER_NORMAL.")
+) WHERE config_name = 'num_users';");
