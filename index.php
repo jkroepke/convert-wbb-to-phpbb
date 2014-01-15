@@ -2,7 +2,7 @@
 
 /**
  *
- * WBB 3.1 to php 3.0.12 converter
+ * WBB 3.1 to phpBB 3.0.12 converter
  * convert features:
  * user
  * user group
@@ -19,6 +19,8 @@
  * TODO: posts
  * TODO: polls
  * TODO: bbcodes
+ *
+ * Polls: Note that only polls placed in the first post of every topic will be converted.
  *
  */
 define('IN_PHPBB', true);
@@ -66,17 +68,20 @@ while($configRow = $phpBBConfigResult->fetch_assoc())
 $phpBBConfigResult->close();
 
 $convertProcess = array(
-    'prepare',
-    'user',
-    'user-group',
-    'user-to-group',
-    'user-rank',
-    'user-avatar',
-    'user-friends',
-    'user-ignore-list',
-    'private-messages',
-    'private-messages-folder',
-    'attachments'
+    //'prepare',
+    //'user',
+    //'user-group',
+    //'user-to-group',
+    //'user-rank',
+    //'user-avatar',
+    //'user-friends',
+    //'user-ignore-list',
+    //'private-messages',
+    //'private-messages-folder',
+    'poll',
+    'poll-options',
+    'poll-votes',
+    //'attachments'
 );
 
 foreach($convertProcess as $converterName)
