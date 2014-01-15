@@ -68,20 +68,20 @@ while($configRow = $phpBBConfigResult->fetch_assoc())
 $phpBBConfigResult->close();
 
 $convertProcess = array(
-    //'prepare',
-    //'user',
-    //'user-group',
-    //'user-to-group',
-    //'user-rank',
-    //'user-avatar',
-    //'user-friends',
-    //'user-ignore-list',
-    //'private-messages',
-    //'private-messages-folder',
+    'prepare',
+    'user',
+    'user-group',
+    'user-to-group',
+    'user-rank',
+    'user-avatar',
+    'user-friends',
+    'user-ignore-list',
+    'private-messages',
+    'private-messages-folder',
     'poll',
     'poll-options',
     'poll-votes',
-    //'attachments'
+    'attachments'
 );
 
 foreach($convertProcess as $converterName)
