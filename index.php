@@ -32,25 +32,8 @@ if(!class_exists('mysqli'))
     exit(1);
 }
 
-$wbbMySQLConnection = array(
-    'host'        => 'localhost',
-    'user'        => 'creativesandbox',
-    'password'    => 'creativesandbox',
-    'database'    => 'creativesandbox_phpbb',
-    'wbbNum'      => '25292',
-);
+require 'config.php';
 
-$wbbPath = '';
-
-$phpBBMySQLConnection = array(
-    'host'        => 'localhost',
-    'user'        => 'creativesandbox',
-    'password'    => 'creativesandbox',
-    'database'    => 'creativesandbox_phpbb',
-    'prefix'      => 'phpbb_',
-);
-
-$phpBBPath = '';
 
 $wbbDb   = new mysqli($wbbMySQLConnection['host'], $wbbMySQLConnection['user'],
     $wbbMySQLConnection['password'], $wbbMySQLConnection['database']);
