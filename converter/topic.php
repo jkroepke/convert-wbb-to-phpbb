@@ -1,16 +1,70 @@
 <?php
 
-$wbbTopics = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_user_rank WHERE `rankTitle` NOT LIKE 'wcf.%';");
+$wbbTopics = $wbbDb->query("SELECT wbbt.*, COUNT(wbbta.boardID) as isGlobal, wbbtv.lastVisitTime FROM wbb{$wbbMySQLConnection['wbbNum']}_1_thread wbbt
+    INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread_visit wbbtv USING(threadID)
+    LEFT JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread_announcement wbbta USING(threadID)
+    GROUP BY wbbt.threadID, wbbtv.threadID, wbbta.threadID
+    HAVING wbbtv.lastVisitTime = MAX(wbbtv.lastVisitTime);");
 
 while($wbbTopic = $wbbTopics->fetch_assoc())
 {
+    $topicType    = POST_NORMAL;
+    if($wbbTopic['isSticky'])
+    {
+        $topicType    = POST_STICKY;
+    }
+    elseif($wbbTopic['isAnnouncement'])
+    {
+        $topicType    = POST_ANNOUNCE;
+    }
+    elseif($wbbTopic['isGlobal'])
+    {
+        $topicType    = POST_GLOBAL;
+    }
+
+    if($wbbTopic['isClosed'])
+    {
+        $topicStatus    = ITEM_LOCKED;
+    }
+    elseif($wbbTopic['movedThreadID'])
+    {
+        $topicStatus    = ITEM_MOVED;
+    }
+    else
+    {
+        $topicStatus    = ITEM_UNLOCKED;
+    }
+
     $phpBBTopic = array(
-        'rank_title'   => $wbbTopic['rankTitle'],
-        'rank_special' => 0,
-        'rank_min'     => $wbbTopic['neededPoints'] / 5
+        'topic_id'                  => $wbbTopic['threadID'],
+        'forum_id'                  => $wbbTopic['boardID'],
+        'icon_id'                   => 0,
+        'topic_attachment'          => $wbbTopic['attachments'] > 0,
+        'topic_approved'            => $wbbTopic['everEnabled'],
+        'topic_reported'            => 0,
+        'topic_title'               => $phpbbDb->real_escape_string($wbbTopic['topic']),
+        'topic_poster'              => $wbbTopic['userID'],
+        'topic_time'                => $wbbTopic['time'],
+        'topic_time_limit'          => 0,
+        'topic_views'               => $wbbTopic['views'],
+        'topic_replies'             => $wbbTopic['replies'],
+        'topic_replies_real'        => $wbbTopic['replies'],
+        'topic_status'              => $topicStatus,
+        'topic_type'                => $topicType,
+        'topic_first_post_id'       => $wbbTopic['firstPostID'],
+        'topic_first_poster_name'   => '',
+        'topic_first_poster_colour' => '',
+        'topic_last_post_id'        => 0,
+        'topic_last_poster_id'      => $wbbTopic['lastPosterID'],
+        'topic_last_poster_name'    => $phpbbDb->real_escape_string($wbbTopic['lastPoster']),
+        'topic_last_poster_colour'  => 0,
+        'topic_last_post_subject'   => 0,
+        'topic_last_post_time'      => $wbbTopic['lastPostTime'],
+        'topic_last_view_time'      => $wbbTopic['lastVisitTime'],
+        'topic_moved_id'            => $wbbTopic['movedThreadID'],
     );
 
-    insertData("ranks", $phpBBTopic);
+    insertData("topics", $phpBBTopic);
 }
 
 $wbbTopics->close();

@@ -15,8 +15,8 @@
  * private message folders
  * private message attachments
  * forums
- * TODO: topic
- * TODO: topics watched by user
+ * topic
+ * TODO: topics subscription
  * TODO: posts
  * polls
  * TODO: bbcodes
@@ -81,6 +81,7 @@ $convertProcess = array(
     'private-messages',
     'private-messages-folder',
     'board',
+    'topic',
     'poll',
     'poll-options',
     'poll-votes',
