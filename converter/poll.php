@@ -20,7 +20,7 @@ while($wbbPoll = $wbbPolls->fetch_assoc())
         'poll_length'           => $wbbPoll['endTime'] - $wbbPoll['time'],
         'poll_max_options'      => $wbbPoll['choiceCount'],
         'poll_last_vote'        => 0,
-        'poll_vote_change'      => ($wbbPoll['votesNotChangeable'] == 0 ? 1 : 0),
+        'poll_vote_change'      => (int) $wbbPoll['votesNotChangeable'] != 0,
     );
     updateData('topics', $phpBBPoll, "topic_id = '".$wbbPoll['threadID']."'");
 
