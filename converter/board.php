@@ -72,5 +72,5 @@ while($wbbBoard = $wbbBoards->fetch_assoc())
         'prune_freq'               => 0,
     );
 
-    insertData("ranks", $phpBBBoard);
+    insertData("forums", $phpBBBoard);
 }
