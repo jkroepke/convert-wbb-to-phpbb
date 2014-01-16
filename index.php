@@ -35,6 +35,8 @@ define('IN_PHPBB', true);
 
 require 'config.php';
 require 'functions.php';
+
+//TODO: Check, if phpBBPath is valid here.
 require $phpBBPath.'includes/utf/utf_tools.php';
 require $phpBBPath.'includes/functions.php';
 require $phpBBPath.'includes/constants.php';
@@ -50,6 +52,8 @@ $wbbDb   = new mysqli($wbbMySQLConnection['host'], $wbbMySQLConnection['user'],
 
 $phpBBDb = new mysqli($phpBBMySQLConnection['host'], $phpBBMySQLConnection['user'],
     $phpBBMySQLConnection['password'], $phpBBMySQLConnection['database']);
+
+
 
 // get the phpbb config.
 $wbbConfigResult = $phpBBDb->query("SELECT optionName, optionValue FROM wcf{$wbbMySQLConnection['wbbNum']}_option;");
