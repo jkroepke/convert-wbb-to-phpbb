@@ -16,16 +16,20 @@
  * private message attachments
  * TODO: forums
  * TODO: topic
+ * TODO: topics watched by user
  * TODO: posts
  * TODO: polls
  * TODO: bbcodes
  *
  */
+
+
 define('IN_PHPBB', true);
 
 //TODO: Add command line help
 
 
+require 'config.php';
 require 'functions.php';
 require $phpBBPath.'includes/utf/utf_tools.php';
 require $phpBBPath.'includes/functions.php';
@@ -36,8 +40,6 @@ if(!class_exists('mysqli'))
 {
     throw new Exception('Extension mysqli is required. Exiting.');
 }
-
-require 'config.php';
 
 $wbbDb   = new mysqli($wbbMySQLConnection['host'], $wbbMySQLConnection['user'],
     $wbbMySQLConnection['password'], $wbbMySQLConnection['database']);
