@@ -6,31 +6,27 @@
  * Time: 23:45
  */
 
-$wbbTopicSubscriptions = $wbbDb->query("SELECT * FROM wbb{$wbbMySQLConnection['wbbNum']}_1_thread_subscription;");
+$wbbThreadSubscriptions = $wbbDb->query("SELECT * FROM wbb{$wbbMySQLConnection['wbbNum']}_1_thread_subscription;");
 
-while($wbbTopicSubscription = $wbbTopicSubscriptions->fetch_assoc())
+while($wbbThreadSubscription = $wbbThreadSubscriptions->fetch_assoc())
 {
-    if($wbbTopicSubscription['enableNotification'] && $wbbTopicSubscription['emails'])
+    if($wbbThreadSubscription['emails'] = 0)
     {
-        $notifyStatus   = NOTIFY_BOTH;
+        $notifyStatus   = NOTIFY_YES;
     }
-    elseif($wbbTopicSubscription['enableNotification'])
+    else
     {
-        $notifyStatus   = NOTIFY_IM;
-    }
-    elseif($wbbTopicSubscription['emails'])
-    {
-        $notifyStatus   = NOTIFY_EMAIL;
+        $notifyStatus   = NOTIFY_NO;
     }
 
-    $phpBBTopicSubscription = array(
-            'topic_id'                  => $wbbTopicSubscription['threadID'],
-            'user_id'                   => $wbbTopicSubscription['userID'],
+    $phpBBTopicsWatch = array(
+            'topic_id'                  => $wbbThreadSubscription['threadID'],
+            'user_id'                   => $wbbThreadSubscription['userID'],
             'notify_status'             => $notifyStatus
         );
 
 
-    insertData("topics_watch", $phpBBTopicSubscription);
+    insertData("topics_watch", $phpBBTopicsWatch);
 }
 
 $wbbTopics->close();
