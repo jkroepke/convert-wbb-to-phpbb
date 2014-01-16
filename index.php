@@ -55,7 +55,7 @@ $phpBBDb = new mysqli($phpBBMySQLConnection['host'], $phpBBMySQLConnection['user
 
 
 
-// get the phpbb config.
+// get the wbb config.
 $wbbConfigResult = $phpBBDb->query("SELECT optionName, optionValue FROM wcf{$wbbMySQLConnection['wbbNum']}_option;");
 $wbbConfig       = array();
 while($configRow = $wbbConfigResult->fetch_assoc())
@@ -74,6 +74,25 @@ while($configRow = $phpBBConfigResult->fetch_assoc())
 }
 
 $phpBBConfigResult->close();
+
+
+// check if avatar and attachment directories are readable and writeable
+if (!is_readable($wbbPath.'wcf/attachments'))
+{
+    throw new Exception("No read access to directory '{$wbbPath}wcf/attachments'!");
+}
+if (!is_writeable($phpBBPath.$phpBBConfig['upload_path']))
+{
+    throw new Exception("No write access to directory '{$phpBBPath}{$phpBBConfig['upload_path']}'!");
+}
+if (!is_readable($wbbPath.'wcf/images/avatars'))
+{
+    throw new Exception("No read access to directory '{$wbbPath}wcf/images/avatars'!");
+}
+if (!is_writeable($phpBBPath.$phpBBConfig['avatar_path']))
+{
+    throw new Exception("No write access to directory '{$phpBBPath}{$phpBBConfig['avatar_path']}'!");
+}
 
 $convertProcess = array(
     'prepare',
