@@ -2,7 +2,7 @@
 
 if (!is_readable($wbbPath.'wcf/attachments'))
 {
-    throw new Exception("No read access for directory '{$wbbPath}wcf/attachments'!");
+    throw new Exception("No read access to directory '{$wbbPath}wcf/attachments'!");
 }
 elseif (!is_writeable($phpBBPath.$phpBBConfig['upload_path']))
 {

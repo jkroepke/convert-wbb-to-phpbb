@@ -2,11 +2,11 @@
 
 if (!is_readable($wbbPath.'wcf/images/avatars'))
 {
-    throw new Exception("No read access for directory '{$wbbPath}wcf/images/avatars'!");
+    throw new Exception("No read access to directory '{$wbbPath}wcf/images/avatars'!");
 }
 elseif (!is_writeable($phpBBPath.$phpBBConfig['avatar_path']))
 {
-    throw new Exception("No write access to diretory '{$phpBBPath}{$phpBBConfig['avatar_path']}'!");
+    throw new Exception("No write access to directory '{$phpBBPath}{$phpBBConfig['avatar_path']}'!");
 }
 else
 {
