@@ -1,5 +1,7 @@
 <?php
 
+@set_time_limit(0);
+
 /**
  *
  * WBB 3.1 to phpBB 3.0.12 converter

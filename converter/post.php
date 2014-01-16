@@ -10,8 +10,8 @@ while($wbbPost = $wbbPosts->fetch_assoc())
     $phpBBPost = array(
         'post_id'          => $wbbPost['postID'],
         'topic_id'         => $wbbPost['threadID'],
-        'forum_id'         => $wbbPost['threadID'],
-        'poster_id'        => $wbbPost['boardID'],
+        'forum_id'         => $wbbPost['boardID'],
+        'poster_id'        => $wbbPost['userID'],
         'icon_id'          => 0,
         'poster_ip'        => $wbbPost['ipAddress'],
         'post_time'        => $wbbPost['time'],
@@ -37,6 +37,19 @@ while($wbbPost = $wbbPosts->fetch_assoc())
     );
 
     insertData("posts", $phpBBPost);
+
+    if($wbbPost['userID'] != 0)
+    {
+        $phpBBTopicPosted = array(
+            'user_id'       => $wbbPost['userID'],
+            'topic_id'      => $wbbPost['threadID'],
+
+            // doesn't matter, what it does ...
+            'topic_posted'  => 1,
+        );
+
+        insertData("topics_posted", $phpBBTopicPosted);
+    }
 }
 
 $wbbPosts->close();
