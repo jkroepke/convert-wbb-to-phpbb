@@ -83,6 +83,7 @@ $convertProcess = array(
     'board',
     'topic',
     'post',
+    'topic-subscriptions',
     'poll',
     'poll-options',
     'poll-votes',
