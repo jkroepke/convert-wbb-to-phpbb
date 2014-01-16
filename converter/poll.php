@@ -6,7 +6,7 @@
  * Time: 23:21
  */
 
-$wbbPolls    = $wbbDb->query("SELECT wcfp.*, wbbp.threadID, wbbt.firstPostID
+$wbbPolls    = $wbbDb->query("SELECT wcfp.*, wbbp.threadID
     FROM wcf{$wbbMySQLConnection['wbbNum']}_poll wcfp
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp ON wcfp.messageID = wbbp.postID
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread wbbt ON wbbp.postID = wbbt.firstPostID
@@ -15,7 +15,7 @@ $wbbPolls    = $wbbDb->query("SELECT wcfp.*, wbbp.threadID, wbbt.firstPostID
 while($wbbPoll = $wbbPolls->fetch_assoc())
 {
     $phpBBPoll = array(
-        'poll_title'            => $wbbPoll['question'],
+        'poll_title'            => $phpbbDb->real_escape_string($wbbPoll['question']),
         'poll_start'            => $wbbPoll['time'],
         'poll_length'           => $wbbPoll['endTime'] - $wbbPoll['time'],
         'poll_max_options'      => $wbbPoll['choiceCount'],

@@ -11,7 +11,7 @@ $PollIds            = array();
 while ($i = $PollIdSql->fetch_assoc())
     $PollIDs[] = $i['topic_first_post_id'];
 
-$wbbPollVotes     = $wbbDb->query("SELECT wcfpov.*,wbbp.threadID
+$wbbPollVotes     = $wbbDb->query("SELECT wcfpov.*, wbbp.threadID
     FROM wcf{$wbbMySQLConnection['wbbNum']}_poll_option_vote wcfpov
     INNER JOIN wcf{$wbbMySQLConnection['wbbNum']}_poll wcfp USING pollID
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp ON wcfp.messageID = wbbp.postID
@@ -20,7 +20,7 @@ $wbbPollVotes     = $wbbDb->query("SELECT wcfpov.*,wbbp.threadID
 while ($wbbPollOption = $wbbPollOptions->fetch_assoc())
 {
     $phpBBPollOptions = array(
-        'topic_id'          => $wbbPollOption['pollID'],
+        'topic_id'          => $wbbPollOption['threadID'],
         'poll_option_id'    => $wbbPollOption['pollOptionID'],
         'vote_user_id'      => $wbbPollOption['userID'],
         'vote_user_ip'      => $wbbPollOption['ipAddress']

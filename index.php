@@ -18,7 +18,6 @@
  * TODO: topic
  * TODO: topics watched by user
  * TODO: posts
- * TODO: polls
  * TODO: bbcodes
  *
  * Polls: Note that only polls placed in the first post of every topic will be converted.
