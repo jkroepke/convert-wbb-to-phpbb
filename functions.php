@@ -7,15 +7,14 @@
  */
 
 
-function convertBBCode($text)
+function convertBBCode($text, $convertConfig = array())
 {
     global $phpBBConfig;
-    //TODO: Convert between WBB's and phpBB's bbcode syntax (i.e. [attach]<id>[/attach] -> [attachment=<id>][/attachment]
+    //TODO: Convert between WBB's and phpBB's bbcode syntax (i.e. [attach]<id>[/attach] -> [attachment=<id>][/attachment])
 
     $message_parser = new parse_message();
     $message_parser->message = str_replace('"', '&quot;', html_entity_decode($text));
-    //function parse($allow_bbcode, $allow_magic_url, $allow_smilies, $allow_img_bbcode = true, $allow_flash_bbcode = true, $allow_quote_bbcode = true, $allow_url_bbcode = true, $update_this_message = true, $mode = 'post')
-    $message_parser->parse($phpBBConfig['allow_bbcode'] ? true : false, $phpBBConfig['allow_post_links'] ? true : false, true, $phpBBConfig['allow_bbcode'], $phpBBConfig['allow_bbcode'], true, $phpBBConfig['allow_post_links']);
+    $message_parser->parse($phpBBConfig['allow_bbcode'] ? ($convertConfig['enableBBCodes'] ? true : false) : false, $phpBBConfig['allow_post_links'], $convertConfig['enableSmilies'] ? true : false);
 
     return array(
         'text'         	=> $message_parser->message,
