@@ -82,6 +82,7 @@ $convertProcess = array(
     'private-messages-folder',
     'board',
     'topic',
+    'post',
     'poll',
     'poll-options',
     'poll-votes',
