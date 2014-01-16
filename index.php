@@ -19,7 +19,7 @@
  * forums
  * topic
  * topics subscription
- * TODO: posts
+ * posts
  * polls
  * TODO: bbcodes
  *
