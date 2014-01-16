@@ -35,6 +35,8 @@ require 'functions.php';
 require $phpBBPath.'includes/utf/utf_tools.php';
 require $phpBBPath.'includes/functions.php';
 require $phpBBPath.'includes/constants.php';
+include($phpBBPath.'common.php');
+include($phpBBPath.'includes/message_parser.php');
 
 
 if(!class_exists('mysqli'))
