@@ -14,11 +14,11 @@
  * private messages
  * private message folders
  * private message attachments
- * TODO: forums
+ * forums
  * TODO: topic
  * TODO: topics watched by user
  * TODO: posts
- * TODO: polls
+ * polls
  * TODO: bbcodes
  *
  * Polls: Note that only polls placed in the first post of every topic will be converted.
@@ -80,6 +80,7 @@ $convertProcess = array(
     'user-ignore-list',
     'private-messages',
     'private-messages-folder',
+    'board',
     'poll',
     'poll-options',
     'poll-votes',

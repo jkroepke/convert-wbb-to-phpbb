@@ -16,8 +16,8 @@ while($wbbPmFolder = $wbbPmFolders->fetch_assoc())
 {
     $phpBBFolder = array(
         'folder_id'   => $wbbPmFolder['folderID'],
-        'user_id'     => $phpBBDb->real_escape_string($wbbPmFolder['userID']),
-        'folder_name' => $wbbPmFolder['folderName'],
+        'user_id'     => $wbbPmFolder['userID'],
+        'folder_name' => $phpBBDb->real_escape_string($wbbPmFolder['folderName']),
         'pm_count'    => isset($phpBBFoldersCount[$wbbPmFolder['folderID']]) ? $phpBBFoldersCount[$wbbPmFolder['folderID']] : 0,
     );
 
