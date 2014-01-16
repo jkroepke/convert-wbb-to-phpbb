@@ -10,21 +10,11 @@ $wbbBoardSubscriptions = $wbbDb->query("SELECT * FROM wbb{$wbbMySQLConnection['w
 
 while($wbbBoardSubscription = $wbbBoardSubscriptions->fetch_assoc())
 {
-    if($wbbBoardSubscription['emails'] = 0)
-    {
-        $notifyStatus   = NOTIFY_YES;
-    }
-    else
-    {
-        $notifyStatus   = NOTIFY_NO;
-    }
-
     $phpBBForumsWatch = array(
         'topic_id'                  => $wbbBoardSubscription['threadID'],
         'user_id'                   => $wbbBoardSubscription['userID'],
-        'notify_status'             => $notifyStatus
+        'notify_status'             => (int) $wbbBoardSubscription['emails'] == 0
     );
-
 
     insertData("forums_watch", $phpBBForumsWatch);
 }
