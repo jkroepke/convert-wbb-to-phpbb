@@ -14,10 +14,11 @@
  * private messages
  * private message folders
  * private message attachments
- * TODO: forums
+ * forums
  * TODO: topic
  * TODO: topics watched by user
  * TODO: posts
+ * polls
  * TODO: bbcodes
  *
  * Polls: Note that only polls placed in the first post of every topic will be converted.
@@ -35,8 +36,6 @@ require 'functions.php';
 require $phpBBPath.'includes/utf/utf_tools.php';
 require $phpBBPath.'includes/functions.php';
 require $phpBBPath.'includes/constants.php';
-include($phpBBPath.'common.php');
-include($phpBBPath.'includes/message_parser.php');
 
 
 if(!class_exists('mysqli'))
@@ -81,6 +80,7 @@ $convertProcess = array(
     'user-ignore-list',
     'private-messages',
     'private-messages-folder',
+    'board',
     'poll',
     'poll-options',
     'poll-votes',
