@@ -32,6 +32,8 @@ while($wbbAttachment = $wbbAttachments->fetch_assoc())
     {
          insertData('attachments', $phpBBAttachment);
     }
+
+    echo '.';
 }
 
 $wbbAttachments->close();

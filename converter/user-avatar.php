@@ -24,6 +24,8 @@ while($wbbAvatar = $wbbAvatars->fetch_assoc())
     {
         updateData('users', $phpBBAvatar, "userid = '".$wbbAvatar['userID']."'");
     }
+
+    echo '.';
 }
 
 $wbbAvatars->close();
