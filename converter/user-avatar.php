@@ -16,13 +16,13 @@ while($wbbAvatar = $wbbAvatars->fetch_assoc())
 
     //TODO: phpBB Pfade vielleicht leeren.
 
-    if (!is_readable($wbbAvatarPath))
+    if (is_readable($wbbAvatarPath) || @chmod($wbbAvatarPath, 0777))
     {
-        throw new Exception("No read access for file '{$wbbAvatarPath}'!");
+        updateData('users', $phpBBAvatar, "userid = '".$wbbAvatar['userID']."'");
     }
     elseif (copy($wbbAvatarPath, $phpBBAvatarPath))
     {
-        updateData('users', $phpBBAvatar, "userid = '".$wbbAvatar['userID']."'");
+        throw new Exception("No read access for file '{$wbbAvatarPath}'!");
     }
 
     echo '.';
