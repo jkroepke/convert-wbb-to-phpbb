@@ -11,6 +11,7 @@ while($wbbUserRank = $wbbUserRanks->fetch_assoc())
     );
 
     insertData("ranks", $phpBBUserRank);
+    echo '.';
 }
 
 $wbbUserRanks->close();

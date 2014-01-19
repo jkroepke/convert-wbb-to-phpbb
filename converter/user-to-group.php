@@ -15,6 +15,7 @@ while($wbbUserToGroup = $wbbUserToGroups->fetch_assoc())
     );
 
     insertData("user_group", $phpBBUserToGroup);
+    echo '.';
 }
 
 $wbbUserToGroups->close();

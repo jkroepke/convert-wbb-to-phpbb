@@ -97,9 +97,14 @@ $convertProcess = array(
     'attachments'
 );
 
-foreach($convertProcess as $converterName)
+$numberOfProcesses  = count($convertProcess);
+
+foreach($convertProcess as $stepNum => $converterName)
 {
+    echo "\n\n[{".(1 + $stepNum)."}/{$numberOfProcesses}] Starting {$converterName} step... \n";
+
     $converterFile = "converter/{$converterName}.php";
+
     if(!file_exists($converterFile))
     {
         throw new Exception("Can not load converter {$converterName}!");

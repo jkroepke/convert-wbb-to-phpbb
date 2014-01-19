@@ -42,7 +42,8 @@ else
         {
              insertData('attachments', $phpBBAttachment);
         }
-     }
+        echo '.';
+    }
 
     $wbbAttachments->close();
 }

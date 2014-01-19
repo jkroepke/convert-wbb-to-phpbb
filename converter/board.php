@@ -73,4 +73,5 @@ while($wbbBoard = $wbbBoards->fetch_assoc())
     );
 
     insertData("forums", $phpBBBoard);
+    echo '.';
 }

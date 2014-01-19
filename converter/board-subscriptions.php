@@ -11,12 +11,13 @@ $wbbBoardSubscriptions = $wbbDb->query("SELECT * FROM wbb{$wbbMySQLConnection['w
 while($wbbBoardSubscription = $wbbBoardSubscriptions->fetch_assoc())
 {
     $phpBBForumsWatch = array(
-        'topic_id'                  => $wbbBoardSubscription['threadID'],
-        'user_id'                   => $wbbBoardSubscription['userID'],
-        'notify_status'             => (int) $wbbBoardSubscription['emails'] == 0
+        'topic_id'      => $wbbBoardSubscription['threadID'],
+        'user_id'       => $wbbBoardSubscription['userID'],
+        'notify_status' => (int) $wbbBoardSubscription['emails'] == 0
     );
 
     insertData("forums_watch", $phpBBForumsWatch);
+    echo '.';
 }
 
 $wbbTopics->close();

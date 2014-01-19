@@ -12,5 +12,6 @@ while($wbbUserFriend = $wbbUserFriends->fetch_assoc())
     );
 
     insertData("zebra", $phpBBUserFriend);
+    echo '.';
 }
 $wbbUserFriends->close();

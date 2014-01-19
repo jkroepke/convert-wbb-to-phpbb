@@ -12,5 +12,6 @@ while($wbbUserBlackList = $wbbUserBlackLists->fetch_assoc())
     );
 
     insertData("zebra", $phpBBUserBlackList);
+    echo '.';
 }
 $wbbUserBlackLists->close();

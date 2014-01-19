@@ -36,5 +36,6 @@ while($wbbUserGroup = $wbbUserGroups->fetch_assoc())
     );
 
     insertData("user_group", $phpBBUserGroup);
+    echo '.';
 }
 $wbbUserGroups->close();

@@ -65,6 +65,7 @@ while($wbbTopic = $wbbTopics->fetch_assoc())
     );
 
     insertData("topics", $phpBBTopic);
+    echo '.';
 }
 
 $wbbTopics->close();

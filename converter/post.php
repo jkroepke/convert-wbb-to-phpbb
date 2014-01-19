@@ -50,6 +50,7 @@ while($wbbPost = $wbbPosts->fetch_assoc())
 
         insertData("topics_posted", $phpBBTopicPosted);
     }
+    echo '.';
 }
 
 $wbbPosts->close();

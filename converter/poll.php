@@ -22,6 +22,7 @@ while($wbbPoll = $wbbPolls->fetch_assoc())
         'poll_last_vote'        => 0,
         'poll_vote_change'      => (int) $wbbPoll['votesNotChangeable'] != 0,
     );
-    updateData('topics', $phpBBPoll, "topic_id = '".$wbbPoll['threadID']."'");
 
+    updateData('topics', $phpBBPoll, "topic_id = '".$wbbPoll['threadID']."'");
+    echo '.';
 }

@@ -25,5 +25,7 @@ while ($wbbPollOption = $wbbPollOptions->fetch_assoc())
         'vote_user_id'      => $wbbPollOption['userID'],
         'vote_user_ip'      => $wbbPollOption['ipAddress']
     );
+
     insertData('poll_votes', $phpBBPollOptions);
+    echo '.';
 }

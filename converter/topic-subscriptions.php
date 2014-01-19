@@ -17,6 +17,7 @@ while($wbbThreadSubscription = $wbbThreadSubscriptions->fetch_assoc())
     );
 
     insertData("topics_watch", $phpBBTopicsWatch);
+    echo '.';
 }
 
 $wbbTopics->close();

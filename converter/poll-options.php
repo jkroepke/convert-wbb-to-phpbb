@@ -25,5 +25,7 @@ while ($wbbPollOption = $wbbPollOptions->fetch_assoc())
         'poll_option_text'  => $phpbbDb->real_escape_string($wbbPollOption['pollOption']),
         'poll_option_total' => $wbbPollOption['votes']
     );
+
     insertData('poll_options', $phpBBPollOptions);
+    echo '.';
 }
