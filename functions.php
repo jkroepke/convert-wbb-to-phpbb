@@ -55,3 +55,7 @@ function updateData($table, $data, $where = '1=1')
 
 	$phpBBDb->query($sql);
 }
+
+function exception_handler(Exception $exception) {
+    echo "[ERROR] ", $exception->getMessage(), "\n";
+}

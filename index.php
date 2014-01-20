@@ -39,6 +39,9 @@ require 'config.php';
 $phpBBPath = realpath($phpBBPath).'/';
 $wbbPath   = realpath($wbbPath).'/';
 
+require 'functions.php';
+set_exception_handler('exception_handler');
+
 if(!file_exists($phpBBPath.'includes/utf/utf_tools.php'))
 {
     throw new Exception("Invalid phpBB path '{$phpBBPath}'!");
@@ -53,8 +56,6 @@ if(!in_array(PHPBB_VERSION, array('3.0.12')))
 {
     throw new Exception('phpBB Version must be 3.0.12!');
 }
-
-require 'functions.php';
 
 require $phpBBPath.'includes/utf/utf_tools.php';
 require $phpBBPath.'includes/functions.php';
