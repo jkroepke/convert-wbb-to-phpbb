@@ -55,6 +55,7 @@ if(!file_exists($wbbPath.'wcf/config.inc.php'))
 require $phpBBPath.'includes/utf/utf_tools.php';
 require $phpBBPath.'includes/functions.php';
 require $phpBBPath.'includes/functions_convert.php';
+require $phpBBPath.'includes/message_parser.php';
 
 $table_prefix = $phpBBMySQLConnection['prefix'];
 require $phpBBPath.'includes/constants.php';
