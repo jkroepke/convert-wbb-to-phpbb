@@ -39,6 +39,10 @@ require 'config.php';
 $phpBBPath = realpath($phpBBPath).'/';
 $wbbPath   = realpath($wbbPath).'/';
 
+// Set phpbb env variables
+define('PHPBB_ROOT_PATH', $phpBBPath);
+$phpEx     = substr(strrchr(__FILE__, '.'), 1);
+
 require 'functions.php';
 set_exception_handler('exception_handler');
 
