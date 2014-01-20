@@ -15,7 +15,7 @@ while($option = $wbbUserOptions->fetch_assoc())
 
 $wbbUserOptions->close();
 
-$wbbUsers = $wbbDb->query("SELECT wcfu.*, wbbu.boardLastMarkAllAsReadTime, ".implode(', ', $wbbUserOptionNames)."
+$wbbUsers = $wbbDb->query("SELECT wcfu.*, boardLastMarkAllAsReadTime, boardLastActivityTime, ".implode(', ', $wbbUserOptionNames)."
     FROM wcf{$wbbMySQLConnection['wbbNum']}_user wcfu
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_user wbbu USING (userID)
     INNER JOIN wcf{$wbbMySQLConnection['wbbNum']}_user_option_value USING (userID);");
@@ -28,12 +28,12 @@ while($wbbUser = $wbbUsers->fetch_assoc())
     $birthday = '';
 
     // don't convert dates without year
-    if(!empty($userSignature[$wbbUserOptionNames['birthday']]) && substr($userSignature[$wbbUserOptionNames['birthday']], 0, 4) !== '0000')
+    if(!empty($wbbUser[$wbbUserOptionNames['birthday']]) && substr($wbbUser[$wbbUserOptionNames['birthday']], 0, 4) !== '0000')
     {
         $birthday    = sprintf('%2d-%2d-%4d',
-            substr($userSignature[$wbbUserOptionNames['birthday']], 8, 2), // day
-            substr($userSignature[$wbbUserOptionNames['birthday']], 5, 2), // month
-            substr($userSignature[$wbbUserOptionNames['birthday']], 0, 4)  // year
+            substr($wbbUser[$wbbUserOptionNames['birthday']], 8, 2), // day
+            substr($wbbUser[$wbbUserOptionNames['birthday']], 5, 2), // month
+            substr($wbbUser[$wbbUserOptionNames['birthday']], 0, 4)  // year
         );
     }
 
@@ -45,12 +45,12 @@ while($wbbUser = $wbbUsers->fetch_assoc())
         'user_perm_from'           => 0,
         'user_ip'                  => $wbbUser['registrationIpAddress'],
         'user_regdate'             => $wbbUser['registrationDate'],
-        'username'                 => $phpbbDb->real_escape_string($wbbUser['username']),
-        'username_clean'           => $phpbbDb->real_escape_string(utf8_clean_string($wbbUser['username'])),
+        'username'                 => $phpBBDb->real_escape_string($wbbUser['username']),
+        'username_clean'           => $phpBBDb->real_escape_string(utf8_clean_string($wbbUser['username'])),
         'user_password'            => phpbb_hash($wbbUser['password']),
         'user_passchg'             => time(),
         'user_pass_convert'        => 1,
-        'user_email'               => $phpbbDb->real_escape_string($wbbUser['email']),
+        'user_email'               => $phpBBDb->real_escape_string($wbbUser['email']),
         'user_email_hash'          => phpbb_email_hash($wbbUser['email']),
         'user_birthday'            => $birthday,
         'user_lastvisit'           => $wbbUser['boardLastActivityTime'],
@@ -86,16 +86,16 @@ while($wbbUser = $wbbUsers->fetch_assoc())
         'user_allow_viewemail'     => 1,
         'user_allow_massemail'     => 1,
         'user_options'             => 230271,
-        'user_sig'                 => $phpbbDb->real_escape_string($userSignature['text']),
+        'user_sig'                 => $phpBBDb->real_escape_string($userSignature['text']),
         'user_sig_bbcode_uid'      => $userSignature['uid'],
         'user_sig_bbcode_bitfield' => $userSignature['bitfield'],
-        'user_from'                => $phpbbDb->real_escape_string($userSignature[$wbbUserOptionNames['location']]),
-        'user_icq'                 => $phpbbDb->real_escape_string($userSignature[$wbbUserOptionNames['icq']]),
-        'user_aim'                 => $phpbbDb->real_escape_string($userSignature[$wbbUserOptionNames['aim']]),
-        'user_yim'                 => $phpbbDb->real_escape_string($userSignature[$wbbUserOptionNames['yim']]),
-        'user_msnm'                => $phpbbDb->real_escape_string($userSignature[$wbbUserOptionNames['msn']]),
-        'user_jabber'              => $phpbbDb->real_escape_string($userSignature[$wbbUserOptionNames['jabber']]),
-        'user_website'             => $phpbbDb->real_escape_string($userSignature[$wbbUserOptionNames['homepage']]),
+        'user_from'                => $phpBBDb->real_escape_string($wbbUser[$wbbUserOptionNames['location']]),
+        'user_icq'                 => $phpBBDb->real_escape_string($wbbUser[$wbbUserOptionNames['icq']]),
+        'user_aim'                 => $phpBBDb->real_escape_string($wbbUser[$wbbUserOptionNames['aim']]),
+        'user_yim'                 => $phpBBDb->real_escape_string($wbbUser[$wbbUserOptionNames['yim']]),
+        'user_msnm'                => $phpBBDb->real_escape_string($wbbUser[$wbbUserOptionNames['msn']]),
+        'user_jabber'              => $phpBBDb->real_escape_string($wbbUser[$wbbUserOptionNames['jabber']]),
+        'user_website'             => $phpBBDb->real_escape_string($wbbUser[$wbbUserOptionNames['homepage']]),
         'user_occ'                 => '',
         'user_interests'           => '',
         'user_form_salt'           => unique_id(),
@@ -170,7 +170,7 @@ $phpBBConfigUpdate  = array(
 updateData('config', $phpBBConfigUpdate, "config_name = 'newest_user_id'");
 
 $phpBBConfigUpdate  = array(
-    'config_value'  => $phpbbDb->real_escape_string($wbbUser['username']),
+    'config_value'  => $phpBBDb->real_escape_string($wbbUser['username']),
 );
 
 updateData('config', $phpBBConfigUpdate, "config_name = 'newest_username'");

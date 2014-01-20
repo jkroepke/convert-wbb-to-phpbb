@@ -22,7 +22,7 @@ while ($wbbPollOption = $wbbPollOptions->fetch_assoc())
     $phpBBPollOptions = array(
         'poll_option_id'    => $wbbPollOption['pollOptionID'],
         'topic_id'          => $wbbPollOption['threadID'],
-        'poll_option_text'  => $phpbbDb->real_escape_string($wbbPollOption['pollOption']),
+        'poll_option_text'  => $phpBBDb->real_escape_string($wbbPollOption['pollOption']),
         'poll_option_total' => $wbbPollOption['votes']
     );
 

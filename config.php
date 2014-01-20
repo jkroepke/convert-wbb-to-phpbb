@@ -2,19 +2,19 @@
 
 $wbbMySQLConnection = array(
     'host'        => 'localhost',
-    'user'        => 'creativesandbox',
-    'password'    => 'creativesandbox',
-    'database'    => 'creativesandbox_phpbb',
+    'user'        => 'root',
+    'password'    => '',
+    'database'    => 'wbb_phpbb_test',
     'wbbNum'      => '25292',
 );
 
 $phpBBMySQLConnection = array(
     'host'        => 'localhost',
-    'user'        => 'creativesandbox',
-    'password'    => 'creativesandbox',
-    'database'    => 'creativesandbox_phpbb',
+    'user'        => 'root',
+    'password'    => '',
+    'database'    => 'wbb_phpbb_test',
     'prefix'      => 'phpbb_',
 );
 
-$wbbPath = '';
-$phpBBPath = '';
+$wbbPath = 'D:/Server/xampp/htdocs/wbb-phpbb-test/test/wbb/';
+$phpBBPath = 'D:/Server/xampp/htdocs/wbb-phpbb-test/test/phpBB3/';

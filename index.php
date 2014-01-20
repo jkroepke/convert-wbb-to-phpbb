@@ -41,7 +41,8 @@ $wbbPath   = realpath($wbbPath).'/';
 
 // Set phpbb env variables
 define('PHPBB_ROOT_PATH', $phpBBPath);
-$phpEx     = substr(strrchr(__FILE__, '.'), 1);
+$phpEx              = substr(strrchr(__FILE__, '.'), 1);
+$phpbb_root_path    = $phpBBPath;
 
 require 'functions.php';
 set_exception_handler('exception_handler');
@@ -101,7 +102,6 @@ while($configRow = $phpBBConfigResult->fetch_assoc())
 
 $phpBBConfigResult->close();
 
-
 // check if avatar and attachment directories are readable and writable
 if (!is_readable($wbbPath.'wcf/attachments') || !@chmod($wbbPath.'wcf/attachments', 0777))
 {
@@ -116,10 +116,18 @@ if (!is_readable($wbbPath.'wcf/images/avatars') || !@chmod($wbbPath.'wcf/images/
 {
     throw new Exception("No read access to directory '{$wbbPath}wcf/images/avatars'!");
 }
+
 if (!is_writeable($phpBBPath.$phpBBConfig['avatar_path']) || !@chmod($phpBBPath.$phpBBConfig['avatar_path'], 0777))
 {
     throw new Exception("No write access to directory '{$phpBBPath}{$phpBBConfig['avatar_path']}'!");
 }
+
+// phpbb env config
+
+// no config update on phpbb unique_id function
+$phpBBConfig['rand_seed_last_update'] = 2147483647;
+$config = $phpBBConfig;
+
 
 $convertProcess = array(
     'prepare',
@@ -131,7 +139,7 @@ $convertProcess = array(
     'user-friends',
     'user-ignore-list',
     'private-messages',
-    'private-messages-folder',
+    'private-messages-folders',
     'board',
     'board-subscriptions',
     'topic',

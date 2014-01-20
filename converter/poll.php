@@ -15,7 +15,7 @@ $wbbPolls    = $wbbDb->query("SELECT wcfp.*, wbbp.threadID
 while($wbbPoll = $wbbPolls->fetch_assoc())
 {
     $phpBBPoll = array(
-        'poll_title'            => $phpbbDb->real_escape_string($wbbPoll['question']),
+        'poll_title'            => $phpBBDb->real_escape_string($wbbPoll['question']),
         'poll_start'            => $wbbPoll['time'],
         'poll_length'           => $wbbPoll['endTime'] - $wbbPoll['time'],
         'poll_max_options'      => $wbbPoll['choiceCount'],

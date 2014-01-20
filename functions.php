@@ -12,6 +12,22 @@ function convertBBCode($text, $convertConfig = array())
     global $phpBBConfig;
     //TODO: Convert between WBB's and phpBB's bbcode syntax (i.e. [attach]<id>[/attach] -> [attachment=<id>][/attachment])
 
+    $convertConfig  = array(
+        'enableBBCodes' => true,
+        'enableSmilies' => true,
+    ) + $convertConfig;
+
+
+    return array(
+        'text'         	=> $text,
+        'checksum'     	=> md5($text),
+        'bitfield'   	=> '',
+        'uid'        	=> substr(base_convert(unique_id(), 16, 36), 0, BBCODE_UID_LEN),
+    );
+
+    //TODO: Fix database connections .....
+    //Fatal error: Call to a member function sql_query() on a non-object in .\phpBB3\includes\message_parser.php on line 150
+
     $message_parser = new parse_message();
     $message_parser->message = str_replace('"', '&quot;', html_entity_decode($text));
     $message_parser->parse($phpBBConfig['allow_bbcode'] ? ($convertConfig['enableBBCodes'] ? true : false) : false, $phpBBConfig['allow_post_links'], $convertConfig['enableSmilies'] ? true : false);

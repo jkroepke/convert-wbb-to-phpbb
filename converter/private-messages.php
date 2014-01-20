@@ -1,7 +1,5 @@
 <?php
 
-echo "Import PMs\n";
-
 $wbbPmUser  = array();
 $wbbPmUsers = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_pm_to_user;");
 
@@ -25,7 +23,7 @@ while($wbbPm = $wbbPms->fetch_assoc())
             'forum_id'      => 0,
             'save_time'     => $wbbPm['time'],
             'draft_subject' => $phpBBDb->real_escape_string($wbbPm['subject']),
-            'draft_message' => $phpBBDb->real_escape_string($wbbPm['text'])
+            'draft_message' => $phpBBDb->real_escape_string($wbbPm['message'])
         );
 
         insertData("drafts", $phpDraft);
@@ -84,8 +82,8 @@ while($wbbPm = $wbbPms->fetch_assoc())
 
         insertData("privmsgs_to", $pmToUser);
 
-        $pmText        = convertBBCode($wbbPm['text']);
-        $phpBBPM    = array(
+        $pmText = convertBBCode($wbbPm['message']);
+        $phpBBPM = array(
             'msg_id'              => $wbbPm['pmID'],
             'root_level'          => $wbbPm['parentPmID'],
             'author_id'           => $wbbPm['userID'],
