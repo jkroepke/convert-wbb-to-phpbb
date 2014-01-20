@@ -36,17 +36,17 @@ define('IN_PHPBB', true);
 
 require 'config.php';
 
-$phpBBPath = realpath($phpBBPath);
-$wbbPath   = realpath($wbbPath);
+$phpBBPath = realpath($phpBBPath).'/';
+$wbbPath   = realpath($wbbPath).'/';
 
 if(!file_exists($phpBBPath.'includes/utf/utf_tools.php'))
 {
-    throw new Exception('Invalid phpBB path!');
+    throw new Exception("Invalid phpBB path '{$phpBBPath}'!");
 }
 
 if(!file_exists($wbbPath.'wcf/config.inc.php'))
 {
-    throw new Exception('Invalid wbb path!');
+    throw new Exception("Invalid wbb path '{$wbbPath}'!");
 }
 
 if(!in_array(PHPBB_VERSION, array('3.0.12')))
