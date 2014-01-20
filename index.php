@@ -52,15 +52,15 @@ if(!file_exists($wbbPath.'wcf/config.inc.php'))
     throw new Exception("Invalid wbb path '{$wbbPath}'!");
 }
 
-if(!in_array(PHPBB_VERSION, array('3.0.12')))
-{
-    throw new Exception('phpBB Version must be 3.0.12!');
-}
-
 require $phpBBPath.'includes/utf/utf_tools.php';
 require $phpBBPath.'includes/functions.php';
 require $phpBBPath.'includes/functions_convert.php';
 require $phpBBPath.'includes/constants.php';
+
+if(!in_array(PHPBB_VERSION, array('3.0.12')))
+{
+    throw new Exception('phpBB Version must be 3.0.12!');
+}
 
 if(!class_exists('mysqli'))
 {
