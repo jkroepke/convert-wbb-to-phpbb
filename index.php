@@ -142,7 +142,7 @@ $numberOfProcesses  = count($convertProcess);
 
 foreach($convertProcess as $stepNum => $converterName)
 {
-    echo "\n\n[{".(1 + $stepNum)."}/{$numberOfProcesses}] Starting {$converterName} step... \n";
+    echo "\n\n[".(1 + $stepNum)."/{$numberOfProcesses}] Starting {$converterName} step... \n";
 
     $converterFile = "converter/{$converterName}.php";
 

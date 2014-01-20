@@ -16,9 +16,9 @@ while($option = $wbbUserOptions->fetch_assoc())
 $wbbUserOptions->close();
 
 $wbbUsers = $wbbDb->query("SELECT wcfu.*, wbbu.boardLastMarkAllAsReadTime, ".implode(', ', $wbbUserOptionNames)."
-    FROM wcf{$wbbMySQLConnection['wbbNum']}_users wcfu
-    INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_users wbbu USING (userID)
-    INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_user_option_value wbbu USING (userID);");
+    FROM wcf{$wbbMySQLConnection['wbbNum']}_user wcfu
+    INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_user wbbu USING (userID)
+    INNER JOIN wcf{$wbbMySQLConnection['wbbNum']}_user_option_value USING (userID);");
 
 while($wbbUser = $wbbUsers->fetch_assoc())
 {
