@@ -6,9 +6,9 @@
  * Time: 19:49
  */
 
-$rootUser        = $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}_users WHERE user_type = 3;")->fetch_assoc();
+$rootUser        = $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}users WHERE user_type = 3;")->fetch_assoc();
 // save all users
-$defaultUsers    = $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}_users WHERE user_type = 2;")->fetch_all();
+$defaultUsers    = $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}users WHERE user_type = 2;")->fetch_all();
 
 // delete the admin and demo posts.
 $phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}acl_users;");
