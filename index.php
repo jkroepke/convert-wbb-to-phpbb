@@ -1,6 +1,9 @@
 <?php
 
 @set_time_limit(0);
+chdir(dirname(__FILE__));
+
+$startTime = microtime(true);
 
 /**
  *
@@ -27,20 +30,36 @@
  *
  */
 
-
 define('IN_PHPBB', true);
 
 //TODO: Add command line help
 
-
 require 'config.php';
+
+$phpBBPath = realpath($phpBBPath);
+$wbbPath   = realpath($wbbPath);
+
+if(!file_exists($phpBBPath.'includes/utf/utf_tools.php'))
+{
+    throw new Exception('Invalid phpBB path!');
+}
+
+if(!file_exists($wbbPath.'wcf/config.inc.php'))
+{
+    throw new Exception('Invalid wbb path!');
+}
+
+if(!in_array(PHPBB_VERSION, array('3.0.12')))
+{
+    throw new Exception('phpBB Version must be 3.0.12!');
+}
+
 require 'functions.php';
 
-//TODO: Check, if phpBBPath is valid here.
 require $phpBBPath.'includes/utf/utf_tools.php';
 require $phpBBPath.'includes/functions.php';
+require $phpBBPath.'includes/functions_convert.php';
 require $phpBBPath.'includes/constants.php';
-
 
 if(!class_exists('mysqli'))
 {
@@ -52,7 +71,6 @@ $wbbDb   = new mysqli($wbbMySQLConnection['host'], $wbbMySQLConnection['user'],
 
 $phpBBDb = new mysqli($phpBBMySQLConnection['host'], $phpBBMySQLConnection['user'],
     $phpBBMySQLConnection['password'], $phpBBMySQLConnection['database']);
-
 
 
 // get the wbb config.
@@ -76,20 +94,21 @@ while($configRow = $phpBBConfigResult->fetch_assoc())
 $phpBBConfigResult->close();
 
 
-// check if avatar and attachment directories are readable and writeable
-if (!is_readable($wbbPath.'wcf/attachments'))
+// check if avatar and attachment directories are readable and writable
+if (!is_readable($wbbPath.'wcf/attachments') || !@chmod($wbbPath.'wcf/attachments', 0777))
 {
     throw new Exception("No read access to directory '{$wbbPath}wcf/attachments'!");
 }
-if (!is_writeable($phpBBPath.$phpBBConfig['upload_path']))
+if (!is_writeable($phpBBPath.$phpBBConfig['upload_path']) || !@chmod($phpBBPath.$phpBBConfig['upload_path'], 0777))
 {
     throw new Exception("No write access to directory '{$phpBBPath}{$phpBBConfig['upload_path']}'!");
 }
-if (!is_readable($wbbPath.'wcf/images/avatars'))
+
+if (!is_readable($wbbPath.'wcf/images/avatars') || !@chmod($wbbPath.'wcf/images/avatars', 0777))
 {
     throw new Exception("No read access to directory '{$wbbPath}wcf/images/avatars'!");
 }
-if (!is_writeable($phpBBPath.$phpBBConfig['avatar_path']))
+if (!is_writeable($phpBBPath.$phpBBConfig['avatar_path']) || !@chmod($phpBBPath.$phpBBConfig['avatar_path'], 0777))
 {
     throw new Exception("No write access to directory '{$phpBBPath}{$phpBBConfig['avatar_path']}'!");
 }
@@ -133,3 +152,6 @@ foreach($convertProcess as $stepNum => $converterName)
         require $converterFile;
     }
 }
+
+$endTime = microtime(true) - $startTime;
+echo "[DONE] {$endTime} seconds execution time.";

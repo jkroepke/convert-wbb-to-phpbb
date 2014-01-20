@@ -4,6 +4,8 @@ $wbbAttachments    = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNu
 
 while($wbbAttachment = $wbbAttachments->fetch_assoc())
 {
+    //TODO: checkout make_unique_filename from phpbb's functions_convert.php
+
     $phpBBAttachment = array(
         'attach_id'      => $wbbAttachment['attachmentID'],
         'post_msg_id'       => $wbbAttachment['containerID'],
