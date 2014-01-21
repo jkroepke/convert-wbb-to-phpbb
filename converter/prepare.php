@@ -18,10 +18,10 @@ $phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}topics_posted;");
 $phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}topics;");
 $phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}forums;");
 $phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}posts;");
+$phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}users;");
 
 echo '.';
 
-$phpBBDb->query("DELETE FROM {$phpBBMySQLConnection['prefix']}users WHERE user_id = 2;");
 $phpBBDb->query("DELETE FROM {$phpBBMySQLConnection['prefix']}acl_groups WHERE forum_id != 0;");
 
 echo '.';

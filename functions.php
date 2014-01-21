@@ -48,11 +48,15 @@ function insertData($table, $data)
 
 	foreach($data as $key => $value)
 	{
-		$sql	.= "´".$key."´ = '".$value."',";
+		$sql	.= "`".$key."` = '".$value."',";
 	}
 
 	$sql	= substr($sql, 0, -1).';';
-	$phpBBDb->query($sql);
+
+    if (!$phpBBDb->query($sql))
+    {
+        throw new Exception(sprintf("[ERROR/PHPBB] MySQL error: %s\n\nQuery:%s", $phpBBDb->error, $sql));
+    }
 }
 
 function updateData($table, $data, $where = '1=1')
@@ -63,15 +67,50 @@ function updateData($table, $data, $where = '1=1')
 
 	foreach($data as $key => $value)
 	{
-		$sql	.= "´".$key."´ = '".$value."',";
+		$sql	.= "`".$key."` = '".$value."',";
 	}
 
 	$sql	= substr($sql, 0, -1).' ';
 	$sql	.= "WHERE {$where};";
 
-	$phpBBDb->query($sql);
+    if (!$phpBBDb->query($sql))
+    {
+        throw new Exception(sprintf("[ERROR/PHPBB] MySQL error: %s\n\nQuery:%s", $phpBBDb->error, $sql));
+    }
 }
 
 function exception_handler(Exception $exception) {
     echo "[ERROR] ", $exception->getMessage(), "\n";
+}
+
+function output($action)
+{
+    static $i = 0;
+
+    switch($action)
+    {
+        case 'row':
+            $i++;
+
+            echo '.';
+
+            if($i % 10 === 0)
+            {
+                echo " ";
+            }
+
+            if($i % 100 === 0)
+            {
+                echo "[{$i}]\n";
+            }
+
+            break;
+        case 'end':
+            if($i % 100 !== 0)
+            {
+                echo " [{$i}]";
+            }
+            $i = 0;
+            break;
+    }
 }

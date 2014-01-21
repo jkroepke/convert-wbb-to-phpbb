@@ -18,14 +18,15 @@ while($wbbAvatar = $wbbAvatars->fetch_assoc())
 
     if ((is_readable($wbbAvatarPath) || @chmod($wbbAvatarPath, 0777)) && copy($wbbAvatarPath, $phpBBAvatarPath))
     {
-        updateData('users', $phpBBAvatar, "userid = '".$wbbAvatar['userID']."'");
+        updateData('users', $phpBBAvatar, "user_id = '".$wbbAvatar['userID']."'");
     }
     else
     {
         throw new Exception("No read access for file '{$wbbAvatarPath}'!");
     }
 
-    echo '.';
+    output('row');
 }
 
 $wbbAvatars->close();
+output('end');

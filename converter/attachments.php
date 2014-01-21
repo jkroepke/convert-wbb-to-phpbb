@@ -34,8 +34,7 @@ while($wbbAttachment = $wbbAttachments->fetch_assoc())
     {
         throw new Exception("No read access for file '{$wbbAttachmentPath}'!");
     }
-
-    echo '.';
 }
 
 $wbbAttachments->close();
+output('end');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Fabio
@@ -11,13 +12,15 @@ $wbbBoardSubscriptions = $wbbDb->query("SELECT * FROM wbb{$wbbMySQLConnection['w
 while($wbbBoardSubscription = $wbbBoardSubscriptions->fetch_assoc())
 {
     $phpBBForumsWatch = array(
-        'topic_id'      => $wbbBoardSubscription['threadID'],
+        'forum_id'      => $wbbBoardSubscription['boardID'],
         'user_id'       => $wbbBoardSubscription['userID'],
         'notify_status' => (int) $wbbBoardSubscription['emails'] == 0
     );
 
     insertData("forums_watch", $phpBBForumsWatch);
-    echo '.';
+
+    output('row');
 }
 
-$wbbTopics->close();
+$wbbBoardSubscriptions->close();
+output('end');

@@ -5,24 +5,19 @@ $wbbUserToGroups    = $wbbDb->query("SELECT ug.*,leaderUserID FROM wcf{$wbbMySQL
         ON userID = leaderUserID AND ug.groupID = gl.groupID
     WHERE ug.groupID > 6;");
 
-if($wbbUserToGroups->num_rows > 0)
+while($wbbUserToGroup = $wbbUserToGroups->fetch_assoc())
 {
-    while($wbbUserToGroup = $wbbUserToGroups->fetch_assoc())
-    {
-        $phpBBUserToGroup = array(
-            'group_id'     => $wbbUserToGroup['groupID'],
-            'user_id'      => $wbbUserToGroup['userID'],
-            'group_leader' => $wbbUserToGroup['userID'] == $wbbUserToGroup['leaderUserID'],
-            'user_pending' => 0
-        );
+    $phpBBUserToGroup = array(
+        'group_id'     => $wbbUserToGroup['groupID'],
+        'user_id'      => $wbbUserToGroup['userID'],
+        'group_leader' => $wbbUserToGroup['userID'] == $wbbUserToGroup['leaderUserID'],
+        'user_pending' => 0
+    );
 
-        insertData("user_group", $phpBBUserToGroup);
-        echo '.';
-    }
-}
-else
-{
-    echo '.';
+    insertData("user_group", $phpBBUserToGroup);
+
+    output('row');
 }
 
 $wbbUserToGroups->close();
+output('end');

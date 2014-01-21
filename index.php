@@ -82,6 +82,17 @@ $phpBBDb = new mysqli($phpBBMySQLConnection['host'], $phpBBMySQLConnection['user
     $phpBBMySQLConnection['password'], $phpBBMySQLConnection['database']);
 
 
+if ($wbbDb->connect_errno)
+{
+    throw new Exception(sprintf("[ERROR/WBB] MySQL connection error: %s\n\nQuery:%s", $wbbDb->error));
+}
+
+if ($phpBBDb->connect_errno)
+{
+    throw new Exception(sprintf("[ERROR/PHPBB] MySQL connection error: %s\n\nQuery:%s", $phpBBDb->error));
+}
+
+
 // get the wbb config.
 $wbbConfigResult = $phpBBDb->query("SELECT optionName, optionValue FROM wcf{$wbbMySQLConnection['wbbNum']}_option;");
 $wbbConfig       = array();

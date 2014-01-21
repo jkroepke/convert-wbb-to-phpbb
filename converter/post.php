@@ -1,7 +1,9 @@
 <?php
 
-$wbbPosts = $wbbDb->query("SELECT wbbp.*, wbbt.boardID FROM wcf{$wbbMySQLConnection['wbbNum']}_post wbbp
+$wbbPosts = $wbbDb->query("SELECT wbbp.*, wbbt.boardID FROM wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread wbbt USING (threadID);");
+
+$topicUserData  = array();
 
 while($wbbPost = $wbbPosts->fetch_assoc())
 {
@@ -38,8 +40,10 @@ while($wbbPost = $wbbPosts->fetch_assoc())
 
     insertData("posts", $phpBBPost);
 
-    if($wbbPost['userID'] != 0)
+    if($wbbPost['userID'] != 0 && !isset($topicUserData[$wbbPost['userID'].'-'.$wbbPost['threadID']]))
     {
+        $topicUserData[$wbbPost['userID'].'-'.$wbbPost['threadID']]  = true;
+
         $phpBBTopicPosted = array(
             'user_id'       => $wbbPost['userID'],
             'topic_id'      => $wbbPost['threadID'],
@@ -50,7 +54,9 @@ while($wbbPost = $wbbPosts->fetch_assoc())
 
         insertData("topics_posted", $phpBBTopicPosted);
     }
-    echo '.';
+
+    output('row');
 }
 
 $wbbPosts->close();
+output('end');

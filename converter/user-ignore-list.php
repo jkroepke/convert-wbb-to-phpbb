@@ -2,24 +2,19 @@
 
 $wbbUserBlackLists = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_user_blacklist;");
 
-if($wbbUserBlackLists->num_rows > 0)
+while($wbbUserBlackList = $wbbUserBlackLists->fetch_assoc())
 {
-    while($wbbUserBlackList = $wbbUserBlackLists->fetch_assoc())
-    {
-        $phpBBUserBlackList = array(
-            'user_id'  => $wbbUserBlackList['userID'],
-            'zebra_id' => $wbbUserBlackList['blackUserID'],
-            'friend'   => 0,
-            'foe'      => 1
-        );
+    $phpBBUserBlackList = array(
+        'user_id'  => $wbbUserBlackList['userID'],
+        'zebra_id' => $wbbUserBlackList['blackUserID'],
+        'friend'   => 0,
+        'foe'      => 1
+    );
 
-        insertData("zebra", $phpBBUserBlackList);
-        echo '.';
-    }
-}
-else
-{
-    echo '.';
+    insertData("zebra", $phpBBUserBlackList);
+
+    output('row');
 }
 
 $wbbUserBlackLists->close();
+output('end');

@@ -35,7 +35,10 @@ while($wbbUserGroup = $wbbUserGroups->fetch_assoc())
         'group_rank'           => $rankId,
     );
 
-    insertData("user_group", $phpBBUserGroup);
-    echo '.';
+    insertData("groups", $phpBBUserGroup);
+
+    output('row');
 }
+
 $wbbUserGroups->close();
+output('end');

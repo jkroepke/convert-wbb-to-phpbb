@@ -37,13 +37,19 @@ while($wbbUser = $wbbUsers->fetch_assoc())
         );
     }
 
+    $homepage = $phpBBDb->real_escape_string($wbbUser[$wbbUserOptionNames['homepage']]);
+    if($homepage == 'http://')
+    {
+        $homepage = '';
+    }
+
     $phpBBUser = array(
         'user_id'                  => $wbbUser['userID'],
         'user_type'                => USER_NORMAL,
         'group_id'                 => 2,
         'user_permissions'         => '',
         'user_perm_from'           => 0,
-        'user_ip'                  => $wbbUser['registrationIpAddress'],
+        'user_ip'                  => !empty($wbbUser['registrationIpAddress']) ? $wbbUser['registrationIpAddress'] : '127.0.0.1',
         'user_regdate'             => $wbbUser['registrationDate'],
         'username'                 => $phpBBDb->real_escape_string($wbbUser['username']),
         'username_clean'           => $phpBBDb->real_escape_string(utf8_clean_string($wbbUser['username'])),
@@ -95,7 +101,7 @@ while($wbbUser = $wbbUsers->fetch_assoc())
         'user_yim'                 => $phpBBDb->real_escape_string($wbbUser[$wbbUserOptionNames['yim']]),
         'user_msnm'                => $phpBBDb->real_escape_string($wbbUser[$wbbUserOptionNames['msn']]),
         'user_jabber'              => $phpBBDb->real_escape_string($wbbUser[$wbbUserOptionNames['jabber']]),
-        'user_website'             => $phpBBDb->real_escape_string($wbbUser[$wbbUserOptionNames['homepage']]),
+        'user_website'             => $homepage,
         'user_occ'                 => '',
         'user_interests'           => '',
         'user_form_salt'           => unique_id(),
@@ -147,7 +153,7 @@ while($wbbUser = $wbbUsers->fetch_assoc())
         insertData("user_group", $phpBBUserToGroup);
     }
 
-    insertData("user", $phpBBUser);
+    insertData("users", $phpBBUser);
 
     // add user to user group
     $phpBBUserToGroup = array(
@@ -158,10 +164,12 @@ while($wbbUser = $wbbUsers->fetch_assoc())
     );
 
     insertData("user_group", $phpBBUserToGroup);
-    echo '.';
+
+    output('row');
 }
 
 $wbbUsers->close();
+output('end');
 
 $phpBBConfigUpdate  = array(
     'config_value'  => $wbbUser['userID'],

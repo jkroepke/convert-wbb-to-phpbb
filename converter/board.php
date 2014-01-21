@@ -3,8 +3,6 @@
 $wbbBoards = $wbbDb->query("SELECT wbbb.*, wbbs.position FROM wbb{$wbbMySQLConnection['wbbNum']}_1_board wbbb
 INNER JOIN `wbb{$wbbMySQLConnection['wbbNum']}_1_board_structure` wbbs USING(boardID);");
 
-$i = 0;
-
 while($wbbBoard = $wbbBoards->fetch_assoc())
 {
     #boardType
@@ -73,5 +71,9 @@ while($wbbBoard = $wbbBoards->fetch_assoc())
     );
 
     insertData("forums", $phpBBBoard);
-    echo '.';
+
+    output('row');
 }
+
+$wbbBoards->close();
+output('end');

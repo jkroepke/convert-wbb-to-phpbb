@@ -17,7 +17,7 @@ $wbbPollVotes     = $wbbDb->query("SELECT wcfpov.*, wbbp.threadID
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp ON wcfp.messageID = wbbp.postID
     WHERE wbbp.threadID IN (".implode(',',$PollIDs).");");
 
-while ($wbbPollOption = $wbbPollOptions->fetch_assoc())
+while ($wbbPollOption = $wbbPollVotes ->fetch_assoc())
 {
     $phpBBPollOptions = array(
         'topic_id'          => $wbbPollOption['threadID'],
@@ -27,5 +27,9 @@ while ($wbbPollOption = $wbbPollOptions->fetch_assoc())
     );
 
     insertData('poll_votes', $phpBBPollOptions);
-    echo '.';
+
+    output('row');
 }
+
+$wbbPollVotes ->close();
+output('end');

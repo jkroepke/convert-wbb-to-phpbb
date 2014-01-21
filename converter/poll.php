@@ -10,7 +10,7 @@ $wbbPolls    = $wbbDb->query("SELECT wcfp.*, wbbp.threadID
     FROM wcf{$wbbMySQLConnection['wbbNum']}_poll wcfp
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp ON wcfp.messageID = wbbp.postID
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread wbbt ON wbbp.postID = wbbt.firstPostID
-    WHERE wcpf.messageType = 'post';");
+    WHERE wcfp.messageType = 'post';");
 
 while($wbbPoll = $wbbPolls->fetch_assoc())
 {
@@ -24,5 +24,9 @@ while($wbbPoll = $wbbPolls->fetch_assoc())
     );
 
     updateData('topics', $phpBBPoll, "topic_id = '".$wbbPoll['threadID']."'");
-    echo '.';
+
+    output('row');
 }
+
+$wbbPolls->close();
+output('end');

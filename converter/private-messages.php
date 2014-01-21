@@ -111,7 +111,8 @@ while($wbbPm = $wbbPms->fetch_assoc())
         insertData("privmsgs", $phpBBPM);
     }
 
-    echo '.';
+    output('row');
 }
 
 $wbbPms->close();
+output('end');
