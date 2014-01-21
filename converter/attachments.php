@@ -17,7 +17,7 @@ while($wbbAttachment = $wbbAttachments->fetch_assoc())
         'download_count'    => $wbbAttachment['downloads'],
         'extension'         => substr(strrchr($wbbAttachment['attachmentName'],'.'),1),
         'mimetype'          => $wbbAttachment['fileType'],
-        'filesize'          => $wbbAttachment['attachmentsSize'],
+        'filesize'          => $wbbAttachment['attachmentSize'],
         'filetime'          => $wbbAttachment['uploadTime']
     );
 
