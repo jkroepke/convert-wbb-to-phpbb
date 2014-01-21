@@ -94,7 +94,7 @@ if ($phpBBDb->connect_errno)
 
 
 // get the wbb config.
-$wbbConfigResult = $phpBBDb->query("SELECT optionName, optionValue FROM wcf{$wbbMySQLConnection['wbbNum']}_option;");
+$wbbConfigResult = $wbbDb->query("SELECT optionName, optionValue FROM wcf{$wbbMySQLConnection['wbbNum']}_option;");
 $wbbConfig       = array();
 while($configRow = $wbbConfigResult->fetch_assoc())
 {

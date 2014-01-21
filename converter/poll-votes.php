@@ -13,7 +13,7 @@ while ($i = $PollIdSql->fetch_assoc())
 
 $wbbPollVotes     = $wbbDb->query("SELECT wcfpov.*, wbbp.threadID
     FROM wcf{$wbbMySQLConnection['wbbNum']}_poll_option_vote wcfpov
-    INNER JOIN wcf{$wbbMySQLConnection['wbbNum']}_poll wcfp USING pollID
+    INNER JOIN wcf{$wbbMySQLConnection['wbbNum']}_poll wcfp ON wcfpo.pollID = wcfp.pollID
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp ON wcfp.messageID = wbbp.postID
     WHERE wbbp.threadID IN (".implode(',',$PollIDs).");");
 

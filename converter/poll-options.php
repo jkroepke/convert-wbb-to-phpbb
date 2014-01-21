@@ -22,7 +22,7 @@ if(!empty($PollIDs))
     //TODO: result always empty.
     $wbbPollOptions     = $wbbDb->query("SELECT wcfpo.*, wbbp.threadID
     FROM wcf{$wbbMySQLConnection['wbbNum']}_poll_option wcfpo
-    INNER JOIN wcf{$wbbMySQLConnection['wbbNum']}_poll wcfp USING pollID
+    INNER JOIN wcf{$wbbMySQLConnection['wbbNum']}_poll wcfp ON wcfpo.pollID = wcfp.pollID
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp ON wcfp.messageID = wbbp.postID
     WHERE wbbp.threadID IN (".implode(',',$PollIDs).");");
 
