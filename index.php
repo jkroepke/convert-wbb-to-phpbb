@@ -68,7 +68,7 @@ require $phpBBPath.'includes/constants.php';
 
 replaceInFile('includes/constants.php', "// Additional tables", "// Additional tables\n\ndefine('USERS_WBB_PASSWORDS_TABLE',	\$table_prefix . 'users_wbb_passwords');");
 
-if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+if (version_compare(PHP_VERSION, '5.3.0') !== 1)
 {
     throw new Exception('php version must be greater then 5.3.0!');
 }
@@ -189,5 +189,5 @@ foreach($convertProcess as $stepNum => $converterName)
     }
 }
 
-$endTime = microtime(true) - $startTime;
-echo "[DONE] {$endTime} seconds execution time.";
+$endTime = round(microtime(true) - $startTime, 2);
+echo "\n\n[DONE] {$endTime} seconds execution time.";
