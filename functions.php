@@ -12,31 +12,49 @@ function convertBBCode($text, $convertConfig = array())
     global $phpBBConfig;
     //TODO: Convert between WBB's and phpBB's bbcode syntax (i.e. [attach]<id>[/attach] -> [attachment=<id>][/attachment])
 
+    //TODO: Check permission to use BBCodes
     $convertConfig  = array(
-        'enableBBCodes' => true,
-        'enableSmilies' => true,
-    ) + $convertConfig;
+            'enableBBCodes' => true,
+            'enableSmilies' => true,
+        ) + $convertConfig;
 
+
+    $phpBBBitfield = new bitfield();
+
+    $bbcodes = array(
+        'quote'			=> array('bbcode_id' => 0,	'regexp' => array('#\[quote(?:=&quot;(.*?)&quot;)?\](.+)\[/quote\]#uise')),
+        'b'				=> array('bbcode_id' => 1,	'regexp' => array('#\[b\](.*?)\[/b\]#uise')),
+        'i'				=> array('bbcode_id' => 2,	'regexp' => array('#\[i\](.*?)\[/i\]#uise')),
+        'url'			=> array('bbcode_id' => 3,	'regexp' => array('#\[url(=(.*))?\](?(1)((?s).*(?-s))|(.*))\[/url\]#uiUe')),
+        'img'			=> array('bbcode_id' => 4,	'regexp' => array('#\[img\](.*)\[/img\]#uiUe')),
+        'size'			=> array('bbcode_id' => 5,	'regexp' => array('#\[size=([\-\+]?\d+)\](.*?)\[/size\]#uise')),
+        'color'			=> array('bbcode_id' => 6,	'regexp' => array('!\[color=(#[0-9a-f]{3}|#[0-9a-f]{6}|[a-z\-]+)\](.*?)\[/color\]!uise')),
+        'u'				=> array('bbcode_id' => 7,	'regexp' => array('#\[u\](.*?)\[/u\]#uise')),
+        'code'			=> array('bbcode_id' => 8,	'regexp' => array('#\[code(?:=([a-z]+))?\](.+\[/code\])#uise')),
+        'list'			=> array('bbcode_id' => 9,	'regexp' => array('#\[list(?:=(?:[a-z0-9]|disc|circle|square))?].*\[/list]#uise')),
+        'email'			=> array('bbcode_id' => 10,	'regexp' => array('#\[email=?(.*?)?\](.*?)\[/email\]#uise')),
+        'flash'			=> array('bbcode_id' => 11,	'regexp' => array('#\[flash=([0-9]+),([0-9]+)\](.*?)\[/flash\]#uie')),
+        'attachment'	=> array('bbcode_id' => 12,	'regexp' => array('#\[attachment=([0-9]+)\](.*?)\[/attachment\]#uise'))
+    );
+
+    foreach ($bbcodes as $bbcode_name => $bbcode_data)
+    {
+        foreach ($bbcode_data['regexp'] as $regexp)
+        {
+            if (preg_match($regexp, $text))
+            {
+                $phpBBBitfield->set($bbcode_data['bbcode_id']);
+            }
+        }
+    }
+
+    $bitfield = $phpBBBitfield->get_base64();
 
     return array(
         'text'         	=> $text,
         'checksum'     	=> md5($text),
-        'bitfield'   	=> '',
+        'bitfield'   	=> $bitfield,
         'uid'        	=> substr(base_convert(unique_id(), 16, 36), 0, BBCODE_UID_LEN),
-    );
-
-    //TODO: Fix database connections .....
-    //Fatal error: Call to a member function sql_query() on a non-object in .\phpBB3\includes\message_parser.php on line 150
-
-    $message_parser = new parse_message();
-    $message_parser->message = str_replace('"', '&quot;', html_entity_decode($text));
-    $message_parser->parse($phpBBConfig['allow_bbcode'] ? ($convertConfig['enableBBCodes'] ? true : false) : false, $phpBBConfig['allow_post_links'], $convertConfig['enableSmilies'] ? true : false);
-
-    return array(
-        'text'         	=> $message_parser->message,
-        'checksum'     	=> md5($message_parser->message),
-        'bitfield'   	=> $message_parser->bbcode_bitfield,
-        'uid'        	=> $message_parser->bbcode_uid,
     );
 }
 
