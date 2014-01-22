@@ -11,13 +11,11 @@
 $PollIdSql          = $phpBBDb->query("SELECT topic_first_post_id FROM {$phpBBMySQLConnection['prefix']}topics WHERE poll_start > 0;");
 $PollIds            = array();
 while ($i = $PollIdSql->fetch_assoc())
-{
-    $PollIDs[] = $i['topic_first_post_id'];
-}
+    $PollIds[] = $i['topic_first_post_id'];
 
 $PollIdSql->close();
 
-if(!empty($PollIDs))
+if(!empty($PollIds))
 {
     //TODO: result always empty.
     $wbbPollOptions     = $wbbDb->query("SELECT wcfpo.*, wbbp.threadID
