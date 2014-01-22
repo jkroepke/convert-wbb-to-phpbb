@@ -7,7 +7,7 @@ while($wbbAttachment = $wbbAttachments->fetch_assoc())
     //TODO: checkout make_unique_filename from phpbb's functions_convert.php
 
     $phpBBAttachment = array(
-        'attach_id'      => $wbbAttachment['attachmentID'],
+        'attach_id'         => $wbbAttachment['attachmentID'],
         'post_msg_id'       => $wbbAttachment['containerID'],
         'in_message'        => ($wbbAttachment['containerType'] == 'pm' ? 1 : 0),
         'poster_id'         => $wbbAttachment['userID'],
@@ -15,7 +15,7 @@ while($wbbAttachment = $wbbAttachments->fetch_assoc())
         'physical_filename' => $wbbAttachment['userID']."_".md5(unique_id()),
         'real_filename'     => $wbbAttachment['attachmentName'],
         'download_count'    => $wbbAttachment['downloads'],
-        'extension'         => substr(strrchr($wbbAttachment['attachmentName'],'.'),1),
+        'extension'         => substr(strrchr($wbbAttachment['attachmentName'], '.'), 1),
         'mimetype'          => $wbbAttachment['fileType'],
         'filesize'          => $wbbAttachment['attachmentSize'],
         'filetime'          => $wbbAttachment['uploadTime']
@@ -25,7 +25,6 @@ while($wbbAttachment = $wbbAttachments->fetch_assoc())
     $phpBBAttachmentPath = $phpBBPath.$phpBBConfig['upload_path'].'/'.$phpBBAttachment['physical_filename'];
 
     //TODO: phpBB Pfade vielleicht leeren.
-
     if (is_readable($wbbAttachmentPath) || @chmod($wbbAttachmentPath, 0777) && copy($wbbAttachmentPath, $phpBBAttachmentPath))
     {
         insertData('attachments', $phpBBAttachment);

@@ -114,3 +114,34 @@ function output($action)
             break;
     }
 }
+
+function replaceInFile($path, $search, $replace, $usePreg = false)
+{
+    global $phpBBPath;
+
+    $file = $phpBBPath.$path;
+
+    if(!file_exists($file))
+    {
+        throw new Exception("Can not find file '{$file}'!");
+    }
+
+    if(!is_writeable($file))
+    {
+        throw new Exception("Can not write to file '{$file}'!");
+    }
+
+    $fileData = file_get_contents($file);
+    if($usePreg)
+    {
+        //TODO: Add preg replace
+    }
+    else
+    {
+        echo $fileData;
+        $fileData = str_replace($search, $replace, $fileData);
+        echo $fileData;
+    }
+
+    file_put_contents($file, $fileData);
+}

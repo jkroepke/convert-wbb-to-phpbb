@@ -15,7 +15,7 @@ $startTime = microtime(true);
  * user avatar
  * user friends
  * user ignore list
- * TODO: user passwords ?
+ * user passwords
  * private messages
  * private message folders
  * private message attachments
@@ -64,6 +64,9 @@ require $phpBBPath.'includes/message_parser.php';
 
 $table_prefix = $phpBBMySQLConnection['prefix'];
 require $phpBBPath.'includes/constants.php';
+
+
+replaceInFile('includes/constants.php', "// Additional tables", "// Additional tables\n\ndefine('USERS_WBB_PASSWORDS_TABLE',	\$table_prefix . 'users_wbb_passwords');");
 
 if(!in_array(PHPBB_VERSION, array('3.0.12')))
 {
@@ -159,7 +162,8 @@ $convertProcess = array(
     'poll',
     'poll-options',
     'poll-votes',
-    'attachments'
+    'attachments',
+    'additional'
 );
 
 $numberOfProcesses  = count($convertProcess);

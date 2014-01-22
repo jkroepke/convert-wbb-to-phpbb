@@ -2,6 +2,15 @@
 
 $wbbUserIpAddress = array();
 
+$phpBBDb->query("CREATE TABLE `phpbb_users_wbb_passwords` (
+ `user_id` int(11) NOT NULL,
+ `password` varchar(40) NOT NULL,
+ `salt` varchar(40) NOT NULL,
+ PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB;");
+
+replaceInFile('includes/constants.php', "// Additional tables", "// Additional tables\ndefine('USERS_WBB_PASSWORDS_TABLE',	\$table_prefix . 'users_wbb_passwords');");
+
 // If the wbb has non dafault optionIDs, we can ask them here.
 $wbbUserOptions = $wbbDb->query("SELECT optionID,optionName FROM wcf{$wbbMySQLConnection['wbbNum']}_user_option
     WHERE optionName IN
@@ -151,6 +160,14 @@ while($wbbUser = $wbbUsers->fetch_assoc())
         );
 
         insertData("user_group", $phpBBUserToGroup);
+    } else {
+        $phpBBUserWbbPassword = array(
+            'user_id'  => $wbbUser['userID'],
+            'password' => $wbbUser['password'],
+            'salt'     => $wbbUser['salt'],
+        );
+
+        insertData("users_wbb_passwords", $phpBBUserWbbPassword);
     }
 
     insertData("users", $phpBBUser);
