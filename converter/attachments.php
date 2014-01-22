@@ -4,7 +4,12 @@ $wbbAttachments    = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNu
 
 while($wbbAttachment = $wbbAttachments->fetch_assoc())
 {
-    //TODO: checkout make_unique_filename from phpbb's functions_convert.php
+    $wbbAttachmentPath = $wbbPath.'wcf/attachments/attachment-'.$wbbAttachment['attachmentID'];
+    if(!file_exists($wbbAttachmentPath))
+    {
+        //Sometimes, the wbb table contains non exists attachments
+        continue;
+    }
 
     $phpBBAttachment = array(
         'attach_id'         => $wbbAttachment['attachmentID'],
@@ -21,11 +26,10 @@ while($wbbAttachment = $wbbAttachments->fetch_assoc())
         'filetime'          => $wbbAttachment['uploadTime']
     );
 
-    $wbbAttachmentPath = $wbbPath.'wcf/attachments/attachment-'.$wbbAttachment['attachmentID'];
     $phpBBAttachmentPath = $phpBBPath.$phpBBConfig['upload_path'].'/'.$phpBBAttachment['physical_filename'];
 
     //TODO: phpBB Pfade vielleicht leeren.
-    if (is_readable($wbbAttachmentPath) || @chmod($wbbAttachmentPath, 0777) && copy($wbbAttachmentPath, $phpBBAttachmentPath))
+    if ((is_readable($wbbAttachmentPath) || @chmod($wbbAttachmentPath, 0777)) && copy($wbbAttachmentPath, $phpBBAttachmentPath))
     {
         insertData('attachments', $phpBBAttachment);
     }
@@ -33,6 +37,8 @@ while($wbbAttachment = $wbbAttachments->fetch_assoc())
     {
         throw new Exception("No read access for file '{$wbbAttachmentPath}'!");
     }
+
+    output('row');
 }
 
 $wbbAttachments->close();
