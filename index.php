@@ -68,9 +68,14 @@ require $phpBBPath.'includes/constants.php';
 
 replaceInFile('includes/constants.php', "// Additional tables", "// Additional tables\n\ndefine('USERS_WBB_PASSWORDS_TABLE',	\$table_prefix . 'users_wbb_passwords');");
 
+if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+{
+    throw new Exception('php version must be greater then 5.3.0!');
+}
+
 if(!in_array(PHPBB_VERSION, array('3.0.12')))
 {
-    throw new Exception('phpBB Version must be 3.0.12!');
+    throw new Exception('phpBB version must be 3.0.12!');
 }
 
 if(!class_exists('mysqli'))
