@@ -22,7 +22,7 @@ if(!empty($phpBBPollIds))
     FROM wcf{$wbbMySQLConnection['wbbNum']}_poll_option wcfpo
     INNER JOIN wcf{$wbbMySQLConnection['wbbNum']}_poll wcfp ON wcfpo.pollID = wcfp.pollID
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp ON wcfp.messageID = wbbp.postID
-    WHERE wbbp.threadID IN (".implode(',',$phpBBPollIds).");");
+    WHERE wbbp.postID IN (".implode(',',$phpBBPollIds).");");
 
     while ($wbbPollOption = $wbbPollOptions->fetch_assoc())
     {
