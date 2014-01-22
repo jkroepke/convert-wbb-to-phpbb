@@ -8,7 +8,7 @@ $wbbUserToGroups    = $wbbDb->query("SELECT ug.*,leaderUserID FROM wcf{$wbbMySQL
 while($wbbUserToGroup = $wbbUserToGroups->fetch_assoc())
 {
     $phpBBUserToGroup = array(
-        'group_id'     => $wbbUserToGroup['groupID'],
+        'group_id'     => $wbbUserToGroup['groupID'] + $phpBBLastGroupId,
         'user_id'      => $wbbUserToGroup['userID'],
         'group_leader' => $wbbUserToGroup['userID'] == $wbbUserToGroup['leaderUserID'],
         'user_pending' => 0

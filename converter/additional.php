@@ -7,7 +7,7 @@
  */
 
 // Insert default users
-foreach($defaultUsers as $phpBBUser)
+foreach($phpBBDefaultUsers as $phpBBUser)
 {
     if($phpBBUser['user_type'] != USER_FOUNDER)
     {
@@ -19,7 +19,7 @@ foreach($defaultUsers as $phpBBUser)
 
 
 // Add and register custom auth method
-copy('files/auth_wbb_db.php', $phpBBPath.'includes/auth/');
+copy('files/auth_wbb_db.php', $phpBBPath.'includes/auth/auth_wbb_db.php');
 
 $phpBBConfigUpdate  = array(
     'config_value'  => 'wbb_db',
