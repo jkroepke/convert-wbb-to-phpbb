@@ -8,21 +8,21 @@
 
 //TODO: bessere varibalen namen.
 
-$PollIdSql          = $phpBBDb->query("SELECT topic_first_post_id FROM {$phpBBMySQLConnection['prefix']}topics WHERE poll_start > 0;");
-$PollIds            = array();
-while ($i = $PollIdSql->fetch_assoc())
-    $PollIds[] = $i['topic_first_post_id'];
+$phpBBPollIdSql          = $phpBBDb->query("SELECT topic_first_post_id FROM {$phpBBMySQLConnection['prefix']}topics WHERE poll_start > 0;");
+$phpBBPollIds            = array();
+while ($phpBBPollId = $phpBBPollIdSql->fetch_assoc())
+    $phpBBPollIds[] = $phpBBPollId['topic_first_post_id'];
 
-$PollIdSql->close();
+$phpBBPollIdSql->close();
 
-if(!empty($PollIds))
+if(!empty($phpBBPollIds))
 {
     //TODO: result always empty.
     $wbbPollOptions     = $wbbDb->query("SELECT wcfpo.*, wbbp.threadID
     FROM wcf{$wbbMySQLConnection['wbbNum']}_poll_option wcfpo
     INNER JOIN wcf{$wbbMySQLConnection['wbbNum']}_poll wcfp ON wcfpo.pollID = wcfp.pollID
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp ON wcfp.messageID = wbbp.postID
-    WHERE wbbp.threadID IN (".implode(',',$PollIDs).");");
+    WHERE wbbp.threadID IN (".implode(',',$phpBBPollIds).");");
 
     while ($wbbPollOption = $wbbPollOptions->fetch_assoc())
     {
