@@ -98,7 +98,8 @@ function updateData($table, $data, $where = '1=1')
 }
 
 function exception_handler(Exception $exception) {
-    echo "[ERROR] ", $exception->getMessage(), "\n";
+    echo "\n\n[ERROR] ", $exception->getMessage(), "\n";
+    exit(1);
 }
 
 function output($action)
@@ -156,9 +157,7 @@ function replaceInFile($path, $search, $replace, $usePreg = false)
     }
     else
     {
-        echo $fileData;
         $fileData = str_replace($search, $replace, $fileData);
-        echo $fileData;
     }
 
     file_put_contents($file, $fileData);
