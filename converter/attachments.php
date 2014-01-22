@@ -12,10 +12,10 @@ while($wbbAttachment = $wbbAttachments->fetch_assoc())
         'in_message'        => ($wbbAttachment['containerType'] == 'pm' ? 1 : 0),
         'poster_id'         => $wbbAttachment['userID'],
         'is_orphan'         => 0,
-        'physical_filename' => $wbbAttachment['userID']."_".md5(unique_id()),
-        'real_filename'     => $wbbAttachment['attachmentName'],
+        'physical_filename' => $phpBBDb->real_escape_string($wbbAttachment['userID']."_".md5(unique_id())),
+        'real_filename'     => $phpBBDb->real_escape_string($wbbAttachment['attachmentName']),
         'download_count'    => $wbbAttachment['downloads'],
-        'extension'         => substr(strrchr($wbbAttachment['attachmentName'], '.'), 1),
+        'extension'         => $phpBBDb->real_escape_string(substr(strrchr($wbbAttachment['attachmentName'], '.'), 1)),
         'mimetype'          => $wbbAttachment['fileType'],
         'filesize'          => $wbbAttachment['attachmentSize'],
         'filetime'          => $wbbAttachment['uploadTime']
