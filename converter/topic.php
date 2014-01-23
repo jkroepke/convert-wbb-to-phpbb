@@ -1,10 +1,10 @@
 <?php
 
-$wbbTopics = $wbbDb->query("SELECT wbbt.*, COUNT(wbbta.boardID) as isGlobal, wbbtv.lastVisitTime FROM wbb{$wbbMySQLConnection['wbbNum']}_1_thread wbbt
-    LEFT JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread_visit wbbtv USING(threadID)
-    LEFT JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread_announcement wbbta USING(threadID)
-    GROUP BY wbbt.threadID, wbbtv.threadID, wbbta.threadID
-    HAVING wbbtv.lastVisitTime = MAX(wbbtv.lastVisitTime);");
+$wbbTopics = $wbbDb->query("SELECT DISTINCT wbbt.*, MAX(wbbtv.lastVisitTime) as lastVisitTime, LEAST(COUNT(wbbta.boardID), 1) as isGlobal
+FROM wbb{$wbbMySQLConnection['wbbNum']}_1_thread wbbt
+LEFT JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread_announcement wbbta USING(threadID)
+LEFT JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread_visit wbbtv USING(threadID)
+GROUP BY wbbt.threadID;");
 
 while($wbbTopic = $wbbTopics->fetch_assoc())
 {
