@@ -31,7 +31,7 @@ function login_wbb_db($username, $password, $ip = '', $browser = '', $forwarded_
     $db->sql_freeresult($result);
 
     // sha1($row['salt'].sha1($row['salt'].sha1($password)))
-    if(!empty($row) && getDoubleSaltedHash($passwor, $row['salt']) === $row['password'])
+    if(!empty($row) && getDoubleSaltedHash($password, $row['salt']) === $row['password'])
     {
         $sql = 'UPDATE ' . USERS_TABLE . "
         SET user_password = '".phpbb_hash($password)."'
