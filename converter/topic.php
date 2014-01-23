@@ -1,7 +1,7 @@
 <?php
 
 $wbbTopics = $wbbDb->query("SELECT wbbt.*, COUNT(wbbta.boardID) as isGlobal, wbbtv.lastVisitTime FROM wbb{$wbbMySQLConnection['wbbNum']}_1_thread wbbt
-    INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread_visit wbbtv USING(threadID)
+    LEFT JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread_visit wbbtv USING(threadID)
     LEFT JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread_announcement wbbta USING(threadID)
     GROUP BY wbbt.threadID, wbbtv.threadID, wbbta.threadID
     HAVING wbbtv.lastVisitTime = MAX(wbbtv.lastVisitTime);");
@@ -60,7 +60,7 @@ while($wbbTopic = $wbbTopics->fetch_assoc())
         'topic_last_poster_colour'  => 0,
         'topic_last_post_subject'   => 0,
         'topic_last_post_time'      => $wbbTopic['lastPostTime'],
-        'topic_last_view_time'      => $wbbTopic['lastVisitTime'],
+        'topic_last_view_time'      => !empty($wbbTopic['lastVisitTime']) ? $wbbTopic['lastVisitTime'] : time(),
         'topic_moved_id'            => $wbbTopic['movedThreadID'],
     );
 
