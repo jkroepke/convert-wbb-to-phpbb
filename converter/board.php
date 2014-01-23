@@ -60,7 +60,7 @@ while($wbbBoard = $wbbBoards->fetch_assoc())
         'forum_flags'              => FORUM_FLAG_ACTIVE_TOPICS + FORUM_FLAG_QUICK_REPLY,
         'forum_options'            => 0,
         'display_subforum_list'    => $wbbBoard['showSubBoards'],
-        'display_on_index'         => $wbbBoard['isInvisible'],
+        'display_on_index'         => (int) $wbbBoard['isInvisible'] == 0,
         'enable_indexing'          => 1,
         'enable_icons'             => 1,
         'enable_prune'             => 0,

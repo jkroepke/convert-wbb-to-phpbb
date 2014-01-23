@@ -64,7 +64,7 @@ while($wbbUser = $wbbUsers->fetch_assoc())
         'username_clean'           => $phpBBDb->real_escape_string(utf8_clean_string($wbbUser['username'])),
         'user_password'            => phpbb_hash($wbbUser['password']),
         'user_passchg'             => time(),
-        'user_pass_convert'        => 1,
+        'user_pass_convert'        => 0,
         'user_email'               => $phpBBDb->real_escape_string($wbbUser['email']),
         'user_email_hash'          => phpbb_email_hash($wbbUser['email']),
         'user_birthday'            => $birthday,
@@ -125,10 +125,6 @@ while($wbbUser = $wbbUsers->fetch_assoc())
         $phpBBUser['group_id']          = 3;
         $phpBBUser['user_rank']         = $rootUser['user_rank'];
         $phpBBUser['user_colour']       = $rootUser['user_colour'];
-        $phpBBUser['user_pass_convert'] = 0;
-
-        // let them login directly without request a new password.
-        $phpBBUser['user_password']     = $rootUser['user_password'];
 
         // register the admin as an admin
         $phpBBAclUser = array(
@@ -160,17 +156,16 @@ while($wbbUser = $wbbUsers->fetch_assoc())
         );
 
         insertData("user_group", $phpBBUserToGroup);
-    } else {
-        $phpBBUserWbbPassword = array(
-            'user_id'  => $wbbUser['userID'],
-            'password' => $wbbUser['password'],
-            'salt'     => $wbbUser['salt'],
-        );
-
-        insertData("users_wbb_passwords", $phpBBUserWbbPassword);
     }
 
     insertData("users", $phpBBUser);
+
+    $phpBBUserWbbPassword = array(
+        'user_id'  => $wbbUser['userID'],
+        'password' => $wbbUser['password'],
+        'salt'     => $wbbUser['salt'],
+    );
+    insertData("users_wbb_passwords", $phpBBUserWbbPassword);
 
     // add user to user group
     $phpBBUserToGroup = array(
