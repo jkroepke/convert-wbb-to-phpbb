@@ -27,7 +27,7 @@ while($wbbPost = $wbbPosts->fetch_assoc())
         'post_subject'     => $phpBBDb->real_escape_string($wbbPost['subject']),
         'post_text'        => $phpBBDb->real_escape_string($postText['text']),
         'post_checksum'    => $postText['checksum'],
-        'post_attachment'  => (int) $wbbPost['attachments'] > 1,
+        'post_attachment'  => (int) $wbbPost['attachments'] != 0,
         'bbcode_bitfield'  => $postText['bitfield'],
         'bbcode_uid'       => $postText['uid'],
         'post_postcount'   => 1,
