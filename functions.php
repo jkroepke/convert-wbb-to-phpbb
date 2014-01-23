@@ -12,11 +12,13 @@ function convertBBCode($text, $convertConfig = array())
     global $phpBBConfig;
     //TODO: Convert between WBB's and phpBB's bbcode syntax (i.e. [attach]<id>[/attach] -> [attachment=<id>][/attachment])
 
+    $text   = preg_replace("!\[url='([^']+)'\]!mu", '[url=$1]', $text);
+
     //TODO: Check permission to use BBCodes
     $convertConfig  = array(
             'enableBBCodes' => true,
             'enableSmilies' => true,
-        ) + $convertConfig;
+    ) + $convertConfig;
 
 
     $phpBBBitfield = new bitfield();
@@ -37,7 +39,7 @@ function convertBBCode($text, $convertConfig = array())
         'attachment'	=> array('bbcode_id' => 12,	'regexp' => array('#\[attachment=([0-9]+)\](.*?)\[/attachment\]#uise'))
     );
 
-    foreach ($bbcodes as $bbcode_name => $bbcode_data)
+    foreach ($bbcodes as $bbcode_data)
     {
         foreach ($bbcode_data['regexp'] as $regexp)
         {
