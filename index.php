@@ -31,13 +31,13 @@ $startTime = microtime(true);
  *
  * Additional:
  * - ACP
- *  - synchronize stats
- *  - synchronize post counter
+ *  - resynchronize stats
+ *  - resynchronize post counter
  * - STK
  *  - fix left/right ids
- *  - synchronize bbcode
- *  - synchronize attachments
- *  - synchronize avatars
+ *  - reparse bbcodes (set option "reparse all bbcodes"!)
+ *  - resynchronize attachments
+ *  - resynchronize avatars
  *
  */
 
