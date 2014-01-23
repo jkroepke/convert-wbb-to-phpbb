@@ -169,7 +169,7 @@ while($wbbUser = $wbbUsers->fetch_assoc())
 
     // add user to user group
     $phpBBUserToGroup = array(
-        'group_id'     => 5,
+        'group_id'     => 2,
         'user_id'      => $wbbUser['userID'],
         'group_leader' => 0,
         'user_pending' => 0
