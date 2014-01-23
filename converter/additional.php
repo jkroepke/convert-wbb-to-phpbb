@@ -39,4 +39,7 @@ if(empty($phpBBAnonymous))
 $phpBBAnonymousId = reset($phpBBAnonymous->fetch_row());
 replaceInFile('includes/constants.php', "define('ANONYMOUS', ".ANONYMOUS.");", "define('ANONYMOUS', {$phpBBAnonymousId});");
 
+// Clear phpBB cache
+array_map('unlink', glob($phpBBPath.'cache/*\.php'));
+
 output('end');
