@@ -20,6 +20,10 @@ foreach($phpBBDefaultUsers as $phpBBUser)
 
 // Add and register custom auth method
 copy('files/auth_wbb_db.php', $phpBBPath.'includes/auth/auth_wbb_db.php');
+replaceInFile('includes/auth/auth_wbb_db.php', "define('ENCRYPTION_ENABLE_SALTING', 1);", "define('ENCRYPTION_ENABLE_SALTING', ".$wbbConfig['encryption_enable_salting'].");");
+replaceInFile('includes/auth/auth_wbb_db.php', "define('ENCRYPTION_ENCRYPT_BEFORE_SALTING', 1);", "define('ENCRYPTION_ENCRYPT_BEFORE_SALTING', ".$wbbConfig['encryption_encrypt_before_salting'].");");
+replaceInFile('includes/auth/auth_wbb_db.php', "define('ENCRYPTION_METHOD', 'sha1');", "define('ENCRYPTION_METHOD', '".$wbbConfig['encryption_method']."');");
+replaceInFile('includes/auth/auth_wbb_db.php', "define('ENCRYPTION_SALT_POSITION', 'before');", "define('ENCRYPTION_SALT_POSITION', '".$wbbConfig['encryption_salt_position']."');");
 
 $phpBBConfigUpdate  = array(
     'config_value'  => 'wbb_db',
@@ -40,6 +44,6 @@ $phpBBAnonymousId = reset($phpBBAnonymous->fetch_row());
 replaceInFile('includes/constants.php', "define('ANONYMOUS', ".ANONYMOUS.");", "define('ANONYMOUS', {$phpBBAnonymousId});");
 
 // Clear phpBB cache
-array_map('unlink', glob($phpBBPath.'cache/*\.php'));
+array_map('unlink', glob($phpBBPath.'cache/*.php'));
 
 output('end');
