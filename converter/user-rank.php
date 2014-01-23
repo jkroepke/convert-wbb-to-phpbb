@@ -6,8 +6,8 @@ while($wbbUserRank = $wbbUserRanks->fetch_assoc())
 {
     $phpBBUserRank = array(
         'rank_title'   => $phpBBDb->real_escape_string($wbbUserRank['rankTitle']),
-        'rank_special' => 0,
-        'rank_min'     => $wbbUserRank['neededPoints'] / 5
+        'rank_special' => (int) $wbbUserRank['groupID'] > 6 || $wbbUserRank['neededPoints'] == 0,
+        'rank_min'     => round($wbbUserRank['neededPoints'] / 5)
     );
 
     insertData("ranks", $phpBBUserRank);
