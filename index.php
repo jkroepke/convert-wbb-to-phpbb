@@ -38,7 +38,7 @@ $startTime = microtime(true);
  *  - reparse bbcodes (set option "reparse all bbcodes"!)
  *  - resynchronize attachments
  *  - resynchronize avatars
- *
+ *  - remove duplicate permissions
  */
 
 define('IN_PHPBB', true);
@@ -174,8 +174,8 @@ $convertProcess = array(
     'board',
     'board-subscriptions',
     'topic',
-    'post',
     'topic-subscriptions',
+    'post',
     'poll',
     'poll-options',
     'poll-votes',
