@@ -72,6 +72,12 @@ while($wbbBoard = $wbbBoards->fetch_assoc())
 
     insertData("forums", $phpBBBoard);
 
+    foreach($phpBBDefaultBoardACLs[$boardType] as $acl)
+    {
+        $acl['forum_id'] = $wbbBoard['boardID'];
+        insertData("acl_groups", $acl);
+    }
+
     output('row');
 }
 

@@ -28,6 +28,12 @@ $startTime = microtime(true);
  *
  * Polls: Note that only polls placed in the first post of every topic will be converted.
  *
+ *
+ * Additional:
+ * - ACP
+ *  - Statistiken resynchronisieren
+ *  - Beitragszähler resynchronisieren
+ *
  */
 
 define('IN_PHPBB', true);

@@ -15,7 +15,27 @@ while($user = $phpBBDefaultUsersDbResult->fetch_assoc())
     $phpBBDefaultUsers[]    = $user;
 }
 $phpBBDefaultUsersDbResult->close();
+output('row');
 
+// get default rights for category
+$phpBBDefaultBoardACLs          = array();
+$phpBBDefaultBoardACLsDbResult  = $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}acl_groups WHERE forum_id = 1;");
+while($acl = $phpBBDefaultBoardACLsDbResult->fetch_assoc())
+{
+    $phpBBDefaultBoardACLs[FORUM_CAT][]    = $acl;
+}
+$phpBBDefaultBoardACLsDbResult->close();
+output('row');
+
+// get default rights for boards
+$phpBBDefaultBoardACLsDbResult  = $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}acl_groups WHERE forum_id = 2;");
+while($acl = $phpBBDefaultBoardACLsDbResult->fetch_assoc())
+{
+    $phpBBDefaultBoardACLs[FORUM_POST][]    = $acl;
+}
+$phpBBDefaultBoardACLsDbResult->close();
+
+$phpBBDefaultBoardACLs[FORUM_LINK] = $phpBBDefaultBoardACLs[FORUM_POST];
 output('row');
 
 // delete the admin and demo posts.
