@@ -25,6 +25,8 @@ replaceInFile('includes/auth/auth_wbb_db.php', "define('ENCRYPTION_ENCRYPT_BEFOR
 replaceInFile('includes/auth/auth_wbb_db.php', "define('ENCRYPTION_METHOD', 'sha1');", "define('ENCRYPTION_METHOD', '".$wbbConfig['encryption_method']."');");
 replaceInFile('includes/auth/auth_wbb_db.php', "define('ENCRYPTION_SALT_POSITION', 'before');", "define('ENCRYPTION_SALT_POSITION', '".$wbbConfig['encryption_salt_position']."');");
 
+replaceInFile('includes/constants.php', "// Additional tables", "// Additional tables\n\ndefine('USERS_WBB_PASSWORDS_TABLE',	\$table_prefix . 'users_wbb_passwords');");
+
 $phpBBConfigUpdate  = array(
     'config_value'  => 'wbb_db',
 );

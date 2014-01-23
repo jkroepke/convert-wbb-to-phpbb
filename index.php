@@ -31,8 +31,13 @@ $startTime = microtime(true);
  *
  * Additional:
  * - ACP
- *  - Statistiken resynchronisieren
- *  - Beitragszähler resynchronisieren
+ *  - synchronize stats
+ *  - synchronize post counter
+ * - STK
+ *  - fix left/right ids
+ *  - synchronize bbcode
+ *  - synchronize attachments
+ *  - synchronize avatars
  *
  */
 
@@ -71,10 +76,7 @@ require $phpBBPath.'includes/functions_content.php';
 $table_prefix = $phpBBMySQLConnection['prefix'];
 require $phpBBPath.'includes/constants.php';
 
-
-replaceInFile('includes/constants.php', "// Additional tables", "// Additional tables\n\ndefine('USERS_WBB_PASSWORDS_TABLE',	\$table_prefix . 'users_wbb_passwords');");
-
-if (version_compare(PHP_VERSION, '5.3.0') !== 1)
+if(version_compare(PHP_VERSION, '5.3.0') !== 1)
 {
     throw new Exception('php version must be greater then 5.3.0!');
 }
@@ -105,6 +107,10 @@ if ($phpBBDb->connect_errno)
 {
     throw new Exception(sprintf("[ERROR/PHPBB] MySQL connection error: %s\n\nQuery:%s", $phpBBDb->error));
 }
+
+// set db connection to utf8
+$wbbDb->set_charset("utf8");
+$phpBBDb->set_charset("utf8");
 
 
 // get the wbb config.
