@@ -1,7 +1,15 @@
 <?php
 
-$wbbBoards = $wbbDb->query("SELECT wbbb.*, wbbs.position FROM wbb{$wbbMySQLConnection['wbbNum']}_1_board wbbb
-INNER JOIN `wbb{$wbbMySQLConnection['wbbNum']}_1_board_structure` wbbs USING(boardID);");
+$wbbBoards = $wbbDb->query("SELECT wbbb.*, wbbs.position,
+wbbp.postID as lastPostID, wbbp.subject as lastPostSubject, wbbp.time as lastPostTime,
+wbbu.userID as lastPosterID, wbbu.username as lastPosterName, wbbu.email as lastPosterMail
+FROM wbb{$wbbMySQLConnection['wbbNum']}_1_board wbbb
+INNER JOIN `wbb{$wbbMySQLConnection['wbbNum']}_1_board_structure` wbbs USING(boardID)
+LEFT JOIN `wbb{$wbbMySQLConnection['wbbNum']}_1_board_last_post` wbblp USING(boardID)
+LEFT JOIN `wbb{$wbbMySQLConnection['wbbNum']}_1_post` wbbp USING(threadID)
+LEFT JOIN `wcf{$wbbMySQLConnection['wbbNum']}_user` wbbu USING(userID)
+GROUP BY wbbb.boardID
+ORDER BY wbblp.languageID ASC, wbbp.postID DESC;");
 
 while($wbbBoard = $wbbBoards->fetch_assoc())
 {
@@ -50,13 +58,13 @@ while($wbbBoard = $wbbBoards->fetch_assoc())
         'forum_status'             => $wbbBoard['isClosed'] ? ITEM_LOCKED : ITEM_UNLOCKED,
         'forum_posts'              => $wbbBoard['posts'],
         'forum_topics'             => $wbbBoard['threads'],
-        'forum_topics_real'        => 1,
-        'forum_last_post_id'       => 0,
-        'forum_last_poster_id'     => 0,
-        'forum_last_post_subject'  => '',
-        'forum_last_post_time'     => 0,
-        'forum_last_poster_name'   => '',
-        'forum_last_poster_colour' => '',
+        'forum_topics_real'        => $wbbBoard['threads'],
+        'forum_last_post_id'       => $wbbBoard['lastPostID'],
+        'forum_last_poster_id'     => $wbbBoard['lastPosterID'],
+        'forum_last_post_subject'  => $phpBBDb->real_escape_string($wbbBoard['lastPostSubject']),
+        'forum_last_post_time'     => $wbbBoard['lastPostTime'],
+        'forum_last_poster_name'   => $phpBBDb->real_escape_string($wbbBoard['lastPosterName']),
+        'forum_last_poster_colour' => $wbbBoard['lastPosterMail'] == $rootUser['user_email'] ? $rootUser['user_colour'] : '',
         'forum_flags'              => FORUM_FLAG_ACTIVE_TOPICS + FORUM_FLAG_QUICK_REPLY,
         'forum_options'            => 0,
         'display_subforum_list'    => $wbbBoard['showSubBoards'],
