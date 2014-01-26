@@ -8,7 +8,7 @@
 
 $wbbPolls    = $wbbDb->query("SELECT wcfp.*, wbbp.threadID
     FROM wcf{$wbbMySQLConnection['wbbNum']}_poll wcfp
-    INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp ON wcfp.messageID = wbbp.postID
+    INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp ON wcfp.messageID = wbbp.postID AND wbbp.deleteTime = 0
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread wbbt ON wbbp.postID = wbbt.firstPostID
     WHERE wcfp.messageType = 'post';");
 

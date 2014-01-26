@@ -12,6 +12,7 @@ LEFT JOIN `wbb{$wbbMySQLConnection['wbbNum']}_1_thread_visit` wbbtv USING(thread
 LEFT JOIN `wbb{$wbbMySQLConnection['wbbNum']}_1_post` wbbp USING(threadID)
 LEFT JOIN `wcf{$wbbMySQLConnection['wbbNum']}_user` wbbfu ON wbbt.userID = wbbfu.userID
 LEFT JOIN `wcf{$wbbMySQLConnection['wbbNum']}_user` wbblu ON wbbt.lastPosterID = wbblu.userID
+WHERE wbbt.deleteTime = 0
 GROUP BY wbbt.threadID
 ORDER BY wbbp.postID DESC;");
 
