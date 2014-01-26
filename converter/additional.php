@@ -44,8 +44,47 @@ if(empty($phpBBAnonymous))
 
 $phpBBAnonymousId = reset($phpBBAnonymous->fetch_row());
 replaceInFile('includes/constants.php', "define('ANONYMOUS', ".ANONYMOUS.");", "define('ANONYMOUS', {$phpBBAnonymousId});");
+output('row');
 
 // Clear phpBB cache
 array_map('unlink', glob($phpBBPath.'cache/*.php'));
+output('row');
 
+// BBCodes
+
+// get last bbcode id
+
+
+// Add align bbcode
+$bbCode = array(
+	'bbcode_id' 			=> 13,
+	'bbcode_tag' 			=> 'align=',
+	'bbcode_helpline'		=> '',
+	'display_on_posting' 	=> 0,
+	'bbcode_match' 			=> '[align={IDENTIFIER}]{TEXT}[/align]',
+	'bbcode_tpl' 			=> '<div style="text-align:{IDENTIFIER}">{TEXT}</div>',
+	'first_pass_match' 		=> $phpBBDb->real_escape_string('!\\[align\\=([a-zA-Z0-9-_]+)\\](.*?)\\[/align\\]!ies'),
+	'first_pass_replace' 	=> $phpBBDb->real_escape_string('\'[align=${1}:$uid]\'.str_replace(array("\r\n", \'\\"\', \'\\\'\', \'(\', \')\'), array("\n", \'"\', \'&#39;\', \'&#40;\', \'&#41;\'), trim(\'${2}\')).\'[/align:$uid]\''),
+	'second_pass_match' 	=> $phpBBDb->real_escape_string('!\\[align\\=([a-zA-Z0-9-_]+):$uid\\](.*?)\\[/align:$uid\\]!s'),
+	'second_pass_replace' 	=> $phpBBDb->real_escape_string('<div style="text-align:${1}">${2}</div>')
+);
+
+insertData('bbcodes', $bbCode);
+output('row');
+
+// Add font bbcode
+$bbCode = array(
+    'bbcode_id' 			=> 14,
+    'bbcode_tag'            => 'font=',
+    'bbcode_helpline'       => '',
+    'display_on_posting'    => 0,
+    'bbcode_match'          => '[font={SIMPLETEXT}]{TEXT}[/font]',
+    'bbcode_tpl'            => '<span style="font-family:{SIMPLETEXT}">{TEXT}</span>',
+    'first_pass_match'      => $phpBBDb->real_escape_string('!\\[font\\=([a-zA-Z0-9-+.,_ ]+)\\](.*?)\\[/font\\]!ies'),
+    'first_pass_replace'    => $phpBBDb->real_escape_string('\'[font=${1}:$uid]\'.str_replace(array("\r\n", \'\\"\', \'\\\'\', \'(\', \')\'), array("\n", \'"\', \'&#39;\', \'&#40;\', \'&#41;\'), trim(\'${2}\')).\'[/font:$uid]\''),
+    'second_pass_match'     => $phpBBDb->real_escape_string('!\\[font\\=([a-zA-Z0-9-+.,_ ]+):$uid\\](.*?)\\[/font:$uid\\]!s'),
+	'second_pass_replace'   => $phpBBDb->real_escape_string('<span style="font-family:${1}">${2}</span>')
+);
+
+insertData('bbcodes', $bbCode);
 output('end');
