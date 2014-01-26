@@ -39,6 +39,8 @@ $startTime = microtime(true);
  *  - resynchronize attachments
  *  - resynchronize avatars
  *  - remove duplicate permissions
+ *  - sanitise anonymous user
+ *  - a
  */
 
 define('IN_PHPBB', true);
@@ -46,6 +48,9 @@ define('IN_PHPBB', true);
 //TODO: Add command line help
 
 require 'config.php';
+
+$phpBBPathReal = $phpBBPath;
+$wbbPathReal = $wbbPath;
 
 $phpBBPath = realpath($phpBBPath).'/';
 $wbbPath   = realpath($wbbPath).'/';
@@ -58,14 +63,34 @@ $phpbb_root_path    = $phpBBPath;
 require 'functions.php';
 set_exception_handler('exception_handler');
 
+if(version_compare(PHP_VERSION, '5.3.0') !== 1)
+{
+    throw new Exception('php version must be greater then 5.3.0!');
+}
+
+if(!class_exists('mysqli'))
+{
+    throw new Exception('Extension mysqli is required. Exiting.');
+}
+
 if(!file_exists($phpBBPath.'includes/utf/utf_tools.php'))
 {
-    throw new Exception("Invalid phpBB path '{$phpBBPath}'!");
+    throw new Exception("Invalid phpBB path '{$phpBBPathReal}'!");
 }
 
 if(!file_exists($wbbPath.'wcf/config.inc.php'))
 {
-    throw new Exception("Invalid wbb path '{$wbbPath}'!");
+    throw new Exception("Invalid wbb path '{$wbbPathReal}'!");
+}
+
+if(!file_exists($phpBBPath.'includes/utf/utf_tools.php'))
+{
+    throw new Exception("Invalid phpBB path '{$phpBBPathReal}'!");
+}
+
+if(!file_exists($phpBBPath.'stk/web.config'))
+{
+    throw new Exception('phpBB stk must be installed! Download here: https://www.phpbb.com/customise/db/official_tool/stk/');
 }
 
 require $phpBBPath.'includes/utf/utf_tools.php';
@@ -76,19 +101,9 @@ require $phpBBPath.'includes/functions_content.php';
 $table_prefix = $phpBBMySQLConnection['prefix'];
 require $phpBBPath.'includes/constants.php';
 
-if(version_compare(PHP_VERSION, '5.3.0') !== 1)
-{
-    throw new Exception('php version must be greater then 5.3.0!');
-}
-
 if(!in_array(PHPBB_VERSION, array('3.0.12')))
 {
     throw new Exception('phpBB version must be 3.0.12!');
-}
-
-if(!class_exists('mysqli'))
-{
-    throw new Exception('Extension mysqli is required. Exiting.');
 }
 
 $wbbDb   = new mysqli($wbbMySQLConnection['host'], $wbbMySQLConnection['user'],
@@ -142,12 +157,10 @@ if (!is_writeable($phpBBPath.$phpBBConfig['upload_path']) || !@chmod($phpBBPath.
 {
     throw new Exception("No write access to directory '{$phpBBPath}{$phpBBConfig['upload_path']}'!");
 }
-
 if (!is_readable($wbbPath.'wcf/images/avatars') || !@chmod($wbbPath.'wcf/images/avatars', 0777))
 {
     throw new Exception("No read access to directory '{$wbbPath}wcf/images/avatars'!");
 }
-
 if (!is_writeable($phpBBPath.$phpBBConfig['avatar_path']) || !@chmod($phpBBPath.$phpBBConfig['avatar_path'], 0777))
 {
     throw new Exception("No write access to directory '{$phpBBPath}{$phpBBConfig['avatar_path']}'!");
@@ -158,7 +171,6 @@ if (!is_writeable($phpBBPath.$phpBBConfig['avatar_path']) || !@chmod($phpBBPath.
 // no config update on phpbb unique_id function
 $phpBBConfig['rand_seed_last_update'] = 2147483647;
 $config = $phpBBConfig;
-
 
 $convertProcess = array(
     'prepare',
@@ -202,4 +214,4 @@ foreach($convertProcess as $stepNum => $converterName)
 }
 
 $endTime = round(microtime(true) - $startTime, 2);
-echo "\n\n[DONE] {$endTime} seconds execution time.";
+echo "\n\n[DONE] {$endTime} seconds execution time.\n";
