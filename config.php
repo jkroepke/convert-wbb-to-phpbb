@@ -1,20 +1,23 @@
 <?php
 
+
+// MySQL Connection to the old Woltlab Buring Board
 $wbbMySQLConnection = array(
     'host'        => 'localhost',
     'user'        => 'root',
     'password'    => '',
-    'database'    => 'wbb_phpbb_test',
-    'wbbNum'      => '25292',
+    'database'    => 'wbb',
+    'wbbNum'      => '1',
 );
 
+// MySQL Connection to the new phpBB
 $phpBBMySQLConnection = array(
     'host'        => 'localhost',
     'user'        => 'root',
     'password'    => '',
-    'database'    => 'wbb_phpbb_test',
+    'database'    => 'phpbb',
     'prefix'      => 'phpbb_',
 );
 
-$wbbPath = 'D:/Server/xampp/htdocs/wbb-phpbb-test/test/wbb/';
-$phpBBPath = 'D:/Server/xampp/htdocs/wbb-phpbb-test/test/phpBB3/';
+$wbbPath    = '/path/to/wbb/';
+$phpBBPath  = '/path/to/phpBB3/';

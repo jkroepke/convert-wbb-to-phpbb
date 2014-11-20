@@ -100,7 +100,8 @@ function updateData($table, $data, $where = '1=1')
 }
 
 function exception_handler(Exception $exception) {
-    echo "\n\n[ERROR] ", $exception->getMessage(), "\n";
+    echo "\n\n ", $exception->getMessage(), "\n";
+    echo "Before you rerun the converter you have to reinstall the target forum! Sorry.\n";
     exit(1);
 }
 
@@ -163,4 +164,21 @@ function replaceInFile($path, $search, $replace, $usePreg = false)
     }
 
     file_put_contents($file, $fileData);
+}
+
+class myMysqli extends mysqli
+{
+    public $origin;
+
+    function query($query, $resultmode = MYSQLI_STORE_RESULT )
+    {
+        $result = parent::query($query, $resultmode);
+
+        if($result === false)
+        {
+            throw new Exception(sprintf("[ERROR/%s]: %s\r\n\r\nQuery: %s", $this->origin, $this->error, $query));
+        }
+
+        return $result;
+    }
 }

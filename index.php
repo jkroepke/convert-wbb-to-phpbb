@@ -107,12 +107,15 @@ if(!in_array(PHPBB_VERSION, array('3.0.12')))
     throw new Exception('phpBB version must be 3.0.12!');
 }
 
-$wbbDb   = new mysqli($wbbMySQLConnection['host'], $wbbMySQLConnection['user'],
+$wbbDb   = new myMysqli($wbbMySQLConnection['host'], $wbbMySQLConnection['user'],
     $wbbMySQLConnection['password'], $wbbMySQLConnection['database']);
 
-$phpBBDb = new mysqli($phpBBMySQLConnection['host'], $phpBBMySQLConnection['user'],
+$phpBBDb = new myMysqli($phpBBMySQLConnection['host'], $phpBBMySQLConnection['user'],
     $phpBBMySQLConnection['password'], $phpBBMySQLConnection['database']);
 
+
+$wbbDb->origin      = 'WBB';
+$phpBBDb->origin    = 'PHPBB';
 
 if ($wbbDb->connect_errno)
 {
@@ -152,19 +155,19 @@ $phpBBConfigResult->close();
 // check if avatar and attachment directories are readable and writable
 if (!is_readable($wbbPath.'wcf/attachments') || !@chmod($wbbPath.'wcf/attachments', 0777))
 {
-    throw new Exception("No read access to directory '{$wbbPath}wcf/attachments'!");
+    throw new Exception("[ERROR/WBB] No read access to directory '{$wbbPath}wcf/attachments'!");
 }
 if (!is_writeable($phpBBPath.$phpBBConfig['upload_path']) || !@chmod($phpBBPath.$phpBBConfig['upload_path'], 0777))
 {
-    throw new Exception("No write access to directory '{$phpBBPath}{$phpBBConfig['upload_path']}'!");
+    throw new Exception("[ERROR/PHPBB] No write access to directory '{$phpBBPath}{$phpBBConfig['upload_path']}'!");
 }
 if (!is_readable($wbbPath.'wcf/images/avatars') || !@chmod($wbbPath.'wcf/images/avatars', 0777))
 {
-    throw new Exception("No read access to directory '{$wbbPath}wcf/images/avatars'!");
+    throw new Exception("[ERROR/WBB] No read access to directory '{$wbbPath}wcf/images/avatars'!");
 }
 if (!is_writeable($phpBBPath.$phpBBConfig['avatar_path']) || !@chmod($phpBBPath.$phpBBConfig['avatar_path'], 0777))
 {
-    throw new Exception("No write access to directory '{$phpBBPath}{$phpBBConfig['avatar_path']}'!");
+    throw new Exception("[ERROR/PHPBB] No write access to directory '{$phpBBPath}{$phpBBConfig['avatar_path']}'!");
 }
 
 // phpbb env config
@@ -206,7 +209,7 @@ foreach($convertProcess as $stepNum => $converterName)
 
     if(!file_exists($converterFile))
     {
-        throw new Exception("Can not load converter {$converterName}!");
+        throw new Exception("[ERROR] Can not load converter {$converterName}!");
     }
     else
     {
