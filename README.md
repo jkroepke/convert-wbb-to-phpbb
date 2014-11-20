@@ -16,3 +16,16 @@ chmod +x <Pfad zur Datei>/index.php
 <Pfad zur Datei>/index.php
 
 Je nach Größe des Forums kann dieser Vorgang mehrere Minuten dauern.
+
+Additional Steps:
+1. Log in into ACP
+2. Run resynchronize statistics and resynchronize post counter
+3. Install STK [https://www.phpbb.com/support/stk/]
+4. Log in into STK
+5. Run follow actions:
+  - fix left/right ids
+  - reparse bbcodes (set option 'reparse all bbcodes'!)
+  - resynchronize attachments
+  - resynchronize avatars
+  - remove duplicate permissions
+  - sanitise anonymous user

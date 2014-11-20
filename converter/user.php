@@ -2,7 +2,7 @@
 
 $wbbUserIpAddress = array();
 
-$phpBBDb->query("CREATE TABLE `phpbb_users_wbb_passwords` (
+$phpBBDb->query("CREATE TABLE `{$phpBBMySQLConnection['prefix']}users_wbb_passwords` (
  `user_id` int(11) NOT NULL,
  `password` varchar(40) NOT NULL,
  `salt` varchar(40) NOT NULL,

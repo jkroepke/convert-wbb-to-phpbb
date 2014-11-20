@@ -219,3 +219,15 @@ foreach($convertProcess as $stepNum => $converterName)
 
 $endTime = round(microtime(true) - $startTime, 2);
 echo "\n\n[DONE] {$endTime} seconds execution time.\n";
+echo "Additional Steps:
+1. Log in into ACP
+2. Run resynchronize statistics and resynchronize post counter
+3. Install STK [https://www.phpbb.com/support/stk/]
+4. Log in into STK
+5. Run follow actions:
+  - fix left/right ids
+  - reparse bbcodes (set option 'reparse all bbcodes'!)
+  - resynchronize attachments
+  - resynchronize avatars
+  - remove duplicate permissions
+  - sanitise anonymous user";
