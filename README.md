@@ -1,13 +1,37 @@
-# Step by Step - Anleitung
 ## Deutsch
-1. **Vor dem Konvertieren bitte ein Backup des Forum anlegen!**
+### Einleitung
+Dieser Konverter erlaubt die Daten von einem WBB ab Version 3.1 zu einen phpBB 3.0.12 zu konvertieren.
 
-2. Ein frisches [phpBB 3.0.12 Deutsch] installieren.
+Folgende Daten werden zum phpBB übertragen:
+* Benutzter
+    * Gruppen
+    * Ränke
+    * Avatare
+    * Freunde
+    * Ignorier-Liste
+    * Passwörter **Brauchen nach den Konventierung nicht zurückgesetzt werden!**
+    * Themen Abonnenten
+* Private Nachrichten
+    * Eigene Nachrichtenordner
+* Änhänge
+* Foren
+* Themen
+* Beiträge
+* Umfragen
+    * Ausnahme: phpBB unterstützt nur im ersten Post Umfragen, da im phpBB Umfragen Themenbezogen sind. Umfragen, die nicht im ersten Post sind, werden nicht mit übertragen!
+* bbcodes
+    * Eigene BBCode werden nicht komplett unterstützt
+
+**Vor dem Konvertieren bitte ein Backup des Forum anlegen!**
+
+### Step by Step
+
+1. Ein frisches [phpBB 3.0.12 Deutsch] installieren.
 Konverter herunterladen und entpacken.
 
   **Bei der Installation sollte die selbe E-Mail Adresse wie in der WBB Installation angegeben werden. Andernfalls extistiert nach der Konvertierung keine Administrator**
-3. Die [config.php] des Konverters anpassen. Dort die MySQL Daten zum WBB und phpBB eintragen, sowie die vollen Dateipfade zu beiden Installationen.
-4. Den Converter via Console starten. Je nach OS cmd (Windows) oder die Standard Shell (Linux/Unix).
+2. Die [config.php] des Konverters anpassen. Dort die MySQL Daten zum WBB und phpBB eintragen, sowie die vollen Dateipfade zu beiden Installationen.
+3. Den Converter via Console starten. Je nach OS cmd (Windows) oder die Standard Shell (Linux/Unix).
   
   * Windows: 
   ```sh
@@ -18,7 +42,7 @@ Konverter herunterladen und entpacken.
   $ php <Pfad zum Konverter>/index.php
   ```
   Je nach Größe des Forums kann dieser Vorgang mehrere Minuten dauern.
-5. Zusätzliche Schritte:
+4. Zusätzliche Schritte:
   * Im ACP einloggen
   * Statistiken und Postzähler synchronisieren
   * [phpBB Support Toolkit] installieren.
@@ -32,12 +56,38 @@ Konverter herunterladen und entpacken.
     * sanitise anonymous user
 
 ## English
-1. **Before converting, please create a backup of the forum!n**
-2. Install a new [phpBB 3.0.12].
+### Introduction
+Within the converter support the migration from a Woltlab Burning Board 3.1 to a fresh phpBB 3.0.12.
+
+Supported convertion actions:
+
+* user
+    * groups
+    * ranks
+    * avatars
+    * friends
+    * ignore list
+    * passwords **Passwords must not be reset!**
+    * topics subscription
+* private messages
+    * custom folders
+    * attachments
+* forums
+* topic
+* posts
+* polls
+    * Only poll at the first topic post will be converted due phpbb limitations!
+* bbcodes
+    * custom bbcode partially supported 
+
+**Before converting, please create a backup of the forum!**
+
+### Step by Step
+1. Install a new [phpBB 3.0.12].
 
   **You should be use the same email adresse as in your wbb installation. Otherwise, there is no administrator after the convertion.**
-3. Change the [config.php]. Enter the database connection settings for WBB and phpBB and add the absolute path to the wbb and phpbb installation.
-4. Run the converter from the command line. If you use windows you can use the cmd, otherwise you the default commandline on your Linux/Unix system.
+2. Change the [config.php]. Enter the database connection settings for WBB and phpBB and add the absolute path to the wbb and phpbb installation.
+3. Run the converter from the command line. If you use windows you can use the cmd, otherwise you the default commandline on your Linux/Unix system.
   
   * Windows: 
   ```sh
@@ -48,7 +98,7 @@ Konverter herunterladen und entpacken.
   $ php <Path to converter>/index.php
   ```
   Depending on the size of the forum may take several minutes to complete.
-5. Additional Steps:
+4. Additional Steps:
   * Log in into ACP
   * Run resynchronize statistics and resynchronize post counter
   * Install [phpBB Support Toolkit]
