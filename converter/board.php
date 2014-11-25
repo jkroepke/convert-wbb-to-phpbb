@@ -78,12 +78,12 @@ while($wbbBoard = $wbbBoards->fetch_assoc())
         'prune_freq'               => 0,
     );
 
-    insertData("forums", $phpBBBoard);
+    insertData(FORUMS_TABLE, $phpBBBoard);
 
     foreach($phpBBDefaultBoardACLs[$boardType] as $acl)
     {
         $acl['forum_id'] = $wbbBoard['boardID'];
-        insertData("acl_groups", $acl);
+        insertData(ACL_GROUPS_TABLE, $acl);
     }
 
     output('row');

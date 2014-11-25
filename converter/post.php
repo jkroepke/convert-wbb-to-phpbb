@@ -39,7 +39,7 @@ while($wbbPost = $wbbPosts->fetch_assoc())
         'post_edit_locked' => $wbbPost['isClosed'],
     );
 
-    insertData("posts", $phpBBPost);
+    insertData(POSTS_TABLE, $phpBBPost);
 
     if($wbbPost['userID'] != 0 && !isset($topicUserData[$wbbPost['userID'].'-'.$wbbPost['threadID']]))
     {
@@ -53,7 +53,7 @@ while($wbbPost = $wbbPosts->fetch_assoc())
             'topic_posted'  => 1,
         );
 
-        insertData("topics_posted", $phpBBTopicPosted);
+        insertData(TOPICS_POSTED_TABLE, $phpBBTopicPosted);
     }
 
     output('row');

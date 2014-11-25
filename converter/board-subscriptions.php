@@ -17,7 +17,7 @@ while($wbbBoardSubscription = $wbbBoardSubscriptions->fetch_assoc())
         'notify_status' => (int) $wbbBoardSubscription['emails'] == 0
     );
 
-    insertData("forums_watch", $phpBBForumsWatch);
+    insertData(FORUMS_WATCH_TABLE, $phpBBForumsWatch);
 
     output('row');
 }

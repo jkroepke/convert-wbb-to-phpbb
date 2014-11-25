@@ -10,7 +10,7 @@ while($wbbUserRank = $wbbUserRanks->fetch_assoc())
         'rank_min'     => round($wbbUserRank['neededPoints'] / 5)
     );
 
-    insertData("ranks", $phpBBUserRank);
+    insertData(RANKS_TABLE, $phpBBUserRank);
 
     output('row');
 }

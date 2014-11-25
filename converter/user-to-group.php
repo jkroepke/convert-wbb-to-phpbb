@@ -14,7 +14,7 @@ while($wbbUserToGroup = $wbbUserToGroups->fetch_assoc())
         'user_pending' => 0
     );
 
-    insertData("user_group", $phpBBUserToGroup);
+    insertData(USER_GROUP_TABLE, $phpBBUserToGroup);
 
     output('row');
 }

@@ -31,7 +31,7 @@ while($wbbAttachment = $wbbAttachments->fetch_assoc())
     //TODO: phpBB Pfade vielleicht leeren.
     if ((is_readable($wbbAttachmentPath) || @chmod($wbbAttachmentPath, 0777)) && copy($wbbAttachmentPath, $phpBBAttachmentPath))
     {
-        insertData('attachments', $phpBBAttachment);
+        insertData(ATTACHMENTS_TABLE, $phpBBAttachment);
     }
     else
     {

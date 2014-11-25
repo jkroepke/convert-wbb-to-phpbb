@@ -6,18 +6,17 @@
  * Time: 23:50
  */
 
-//TODO: bessere varibalen namen.
-
-$phpBBPollIdSql          = $phpBBDb->query("SELECT topic_first_post_id FROM {$phpBBMySQLConnection['prefix']}topics WHERE poll_start > 0;");
+$phpBBPollIdSql          = $phpBBDb->query("SELECT topic_first_post_id FROM ".TOPICS_TABLE." WHERE poll_start > 0;");
 $phpBBPollIds            = array();
 while ($phpBBPollId = $phpBBPollIdSql->fetch_assoc())
+{
     $phpBBPollIds[] = $phpBBPollId['topic_first_post_id'];
+}
 
 $phpBBPollIdSql->close();
 
 if(!empty($phpBBPollIds))
 {
-    //TODO: result always empty.
     $wbbPollOptions     = $wbbDb->query("SELECT wcfpo.*, wbbp.threadID
     FROM wcf{$wbbMySQLConnection['wbbNum']}_poll_option wcfpo
     INNER JOIN wcf{$wbbMySQLConnection['wbbNum']}_poll wcfp ON wcfpo.pollID = wcfp.pollID
@@ -33,7 +32,7 @@ if(!empty($phpBBPollIds))
             'poll_option_total' => $wbbPollOption['votes']
         );
 
-        insertData('poll_options', $phpBBPollOptions);
+        insertData(POLL_OPTIONS_TABLE, $phpBBPollOptions);
 
         output('row');
     }

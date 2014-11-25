@@ -74,7 +74,7 @@ while($wbbTopic = $wbbTopics->fetch_assoc())
         'topic_moved_id'            => $wbbTopic['movedThreadID'],
     );
 
-    insertData("topics", $phpBBTopic);
+    insertData(TOPICS_TABLE, $phpBBTopic);
 
     output('row');
 }

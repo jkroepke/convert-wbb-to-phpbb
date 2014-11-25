@@ -62,9 +62,9 @@ function convertBBCode($text, $convertConfig = array())
 
 function insertData($table, $data)
 {
-	global $phpBBDb, $phpBBMySQLConnection;
+	global $phpBBDb;
 
-	$sql = "INSERT INTO {$phpBBMySQLConnection['prefix']}{$table} SET ";
+	$sql = "INSERT INTO {$table} SET ";
 
 	foreach($data as $key => $value)
 	{
@@ -81,9 +81,9 @@ function insertData($table, $data)
 
 function updateData($table, $data, $where = '1=1')
 {
-	global $phpBBDb, $phpBBMySQLConnection;
+	global $phpBBDb;
 
-	$sql = "UPDATE {$phpBBMySQLConnection['prefix']}{$table} SET ";
+	$sql = "UPDATE {$table} SET ";
 
 	foreach($data as $key => $value)
 	{
@@ -137,12 +137,8 @@ function output($action)
     }
 }
 
-function replaceInFile($path, $search, $replace, $usePreg = false)
+function replaceInFile($file, $search, $replace, $usePreg = false)
 {
-    global $phpBBPath;
-
-    $file = $phpBBPath.$path;
-
     if(!file_exists($file))
     {
         throw new Exception("Can not find file '{$file}'!");

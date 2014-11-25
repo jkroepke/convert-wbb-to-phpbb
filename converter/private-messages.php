@@ -26,7 +26,7 @@ while($wbbPm = $wbbPms->fetch_assoc())
             'draft_message' => $phpBBDb->real_escape_string($wbbPm['message'])
         );
 
-        insertData("drafts", $phpDraft);
+        insertData(DRAFTS_TABLE, $phpDraft);
     }
     else
     {
@@ -62,7 +62,7 @@ while($wbbPm = $wbbPms->fetch_assoc())
                 'folder_id'    => $pmUser['folderID'] != 0 ? $pmUser['folderID'] : PRIVMSGS_INBOX
             );
 
-            insertData("privmsgs_to", $pmToUser);
+            insertData(PRIVMSGS_TO_TABLE, $pmToUser);
         }
 
         // phpBB add the sender to the "to" table, wbb not.
@@ -80,7 +80,7 @@ while($wbbPm = $wbbPms->fetch_assoc())
             'folder_id'    => PRIVMSGS_OUTBOX
         );
 
-        insertData("privmsgs_to", $pmToUser);
+        insertData(PRIVMSGS_TO_TABLE, $pmToUser);
 
         $pmText = convertBBCode($wbbPm['message']);
         $phpBBPM = array(
@@ -108,7 +108,7 @@ while($wbbPm = $wbbPms->fetch_assoc())
             'message_reported'    => 0,
         );
 
-        insertData("privmsgs", $phpBBPM);
+        insertData(PRIVMSGS_TABLE, $phpBBPM);
     }
 
     output('row');

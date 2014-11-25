@@ -16,7 +16,7 @@ while($wbbThreadSubscription = $wbbThreadSubscriptions->fetch_assoc())
         'notify_status'             => (int) $wbbThreadSubscription['emails'] == 0
     );
 
-    insertData("topics_watch", $phpBBTopicsWatch);
+    insertData(TOPICS_WATCH_TABLE, $phpBBTopicsWatch);
 
     output('row');
 }

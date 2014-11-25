@@ -11,14 +11,23 @@ while($wbbAvatar = $wbbAvatars->fetch_assoc())
         'user_avatar_type'      => 1
     );
 
-    $wbbAvatarPath = $wbbPath.'wcf/images/avatars/avatar-'.$wbbAvatar['avatarID'].'.'.$wbbAvatar['avatarExtension'];
-    $phpBBAvatarPath = $phpBBPath.$phpBBConfig['avatar_path'].'/'.$phpBBConfig['avatar_salt']."_".$wbbAvatar['userID'].".".$wbbAvatar['avatarExtension'];
+    $wbbAvatarPath = $wbbPath.sprintf('wcf/images/avatars/avatar-%d.%s',
+        $wbbAvatar['avatarID'],
+        $wbbAvatar['avatarExtension']
+    );
+
+    $phpBBAvatarPath = $phpBBPath.sprintf('%s/%s_%d.%s',
+        $phpBBConfig['avatar_path'],
+        $phpBBConfig['avatar_salt'],
+        $wbbAvatar['userID'],
+        $wbbAvatar['avatarExtension']
+    );
 
     //TODO: phpBB Pfade vielleicht leeren.
 
     if ((is_readable($wbbAvatarPath) || @chmod($wbbAvatarPath, 0777)) && copy($wbbAvatarPath, $phpBBAvatarPath))
     {
-        updateData('users', $phpBBAvatar, "user_id = '".$wbbAvatar['userID']."'");
+        updateData(USERS_TABLE, $phpBBAvatar, "user_id = '".$wbbAvatar['userID']."'");
     }
     else
     {

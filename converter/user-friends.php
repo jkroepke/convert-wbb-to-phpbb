@@ -11,7 +11,7 @@ while($wbbUserFriend = $wbbUserFriends->fetch_assoc())
         'foe'      => 0
     );
 
-    insertData("zebra", $phpBBUserFriend);
+    insertData(ZEBRA_TABLE, $phpBBUserFriend);
 
     output('row');
 }

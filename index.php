@@ -66,7 +66,7 @@ set_exception_handler('exception_handler');
 
 if(version_compare(PHP_VERSION, '5.3.0') !== 1)
 {
-    throw new Exception('php version must be greater then 5.3.0!');
+    throw new Exception('php version must be greater then 5.3.0! Exiting.');
 }
 
 if(!class_exists('mysqli'))
@@ -101,6 +101,7 @@ require $phpBBPath.'includes/functions_content.php';
 
 $table_prefix = $phpBBMySQLConnection['prefix'];
 require $phpBBPath.'includes/constants.php';
+define('USERS_WBB_PASSWORDS_TABLE', $table_prefix.'users_wbb_passwords');
 
 if(!in_array(PHPBB_VERSION, array('3.0.12')))
 {
@@ -143,7 +144,7 @@ while($configRow = $wbbConfigResult->fetch_assoc())
 $wbbConfigResult->close();
 
 // get the phpbb config.
-$phpBBConfigResult = $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}config;");
+$phpBBConfigResult = $phpBBDb->query("SELECT * FROM ".CONFIG_TABLE.";");
 $phpBBConfig       = array();
 while($configRow = $phpBBConfigResult->fetch_assoc())
 {
@@ -219,15 +220,4 @@ foreach($convertProcess as $stepNum => $converterName)
 
 $endTime = round(microtime(true) - $startTime, 2);
 echo "\n\n[DONE] {$endTime} seconds execution time.\n";
-echo "Additional Steps:
-1. Log in into ACP
-2. Run resynchronize statistics and resynchronize post counter
-3. Install STK [https://www.phpbb.com/support/stk/]
-4. Log in into STK
-5. Run follow actions:
-  - fix left/right ids
-  - reparse bbcodes (set option 'reparse all bbcodes'!)
-  - resynchronize attachments
-  - resynchronize avatars
-  - remove duplicate permissions
-  - sanitise anonymous user";
+echo "Read Readme for Additional Steps!\n";

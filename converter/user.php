@@ -2,14 +2,12 @@
 
 $wbbUserIpAddress = array();
 
-$phpBBDb->query("CREATE TABLE `{$phpBBMySQLConnection['prefix']}users_wbb_passwords` (
+$phpBBDb->query("CREATE TABLE `".USERS_WBB_PASSWORDS_TABLE."` (
  `user_id` int(11) NOT NULL,
  `password` varchar(40) NOT NULL,
  `salt` varchar(40) NOT NULL,
  PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB;");
-
-replaceInFile('includes/constants.php', "// Additional tables", "// Additional tables\ndefine('USERS_WBB_PASSWORDS_TABLE',	\$table_prefix . 'users_wbb_passwords');");
 
 // If the wbb has non dafault optionIDs, we can ask them here.
 $wbbUserOptions = $wbbDb->query("SELECT optionID,optionName FROM wcf{$wbbMySQLConnection['wbbNum']}_user_option
@@ -28,6 +26,17 @@ $wbbUsers = $wbbDb->query("SELECT wcfu.*, boardLastMarkAllAsReadTime, boardLastA
     FROM wcf{$wbbMySQLConnection['wbbNum']}_user wcfu
     INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_user wbbu USING (userID)
     INNER JOIN wcf{$wbbMySQLConnection['wbbNum']}_user_option_value USING (userID);");
+
+$adminAvailable = reset($wbbDb->query("SELECT COUNT(*)
+    FROM wcf{$wbbMySQLConnection['wbbNum']}_user
+    WHERE email = ".$phpBBDb->real_escape_string($rootUser['user_email']).";")->fetch_row());
+
+if(empty($adminAvailable))
+{
+    $lowestUser = reset($wbbDb->query("SELECT LEAST(userID) FROM wcf{$wbbMySQLConnection['wbbNum']}_user;")->fetch_row());
+}
+
+$adminFound = false;
 
 while($wbbUser = $wbbUsers->fetch_assoc())
 {
@@ -117,55 +126,59 @@ while($wbbUser = $wbbUsers->fetch_assoc())
         'user_new'                 => 0
     );
 
-    if($wbbUser['email'] == $rootUser['user_email'])
+    if(!$adminFound)
     {
-        // we found the old admin user. yey
+        if((isset($lowestUser) && $lowestUser == $wbbUser['userID']) XOR $wbbUser['email'] == $rootUser['user_email'])
+        {
+            $adminFound = true;
+            // we found the old admin user. yey
 
-        $phpBBUser['user_type']         = USER_FOUNDER;
-        $phpBBUser['group_id']          = 3;
-        $phpBBUser['user_rank']         = $rootUser['user_rank'];
-        $phpBBUser['user_colour']       = $rootUser['user_colour'];
+            $phpBBUser['user_type']         = USER_FOUNDER;
+            $phpBBUser['group_id']          = 3;
+            $phpBBUser['user_rank']         = $rootUser['user_rank'];
+            $phpBBUser['user_colour']       = $rootUser['user_colour'];
 
-        // register the admin as an admin
-        $phpBBAclUser = array(
-            'user_id'        => $phpBBUser['user_id'],
-            'forum_id'       => 0,
-            'auth_option_id' => 0,
-            'auth_role_id'   => 5,
-            'auth_setting'   => 0
-        );
+            // register the admin as an admin
+            $phpBBAclUser = array(
+                'user_id'        => $phpBBUser['user_id'],
+                'forum_id'       => 0,
+                'auth_option_id' => 0,
+                'auth_role_id'   => 5,
+                'auth_setting'   => 0
+            );
 
-        insertData("acl_users", $phpBBAclUser);
+            insertData(ACL_USERS_TABLE, $phpBBAclUser);
 
-        // add the founder to global mod ...
-        $phpBBUserToGroup = array(
-            'group_id'     => 4,
-            'user_id'      => $wbbUser['userID'],
-            'group_leader' => 0,
-            'user_pending' => 0
-        );
+            // add the founder to global mod ...
+            $phpBBUserToGroup = array(
+                'group_id'     => 4,
+                'user_id'      => $wbbUser['userID'],
+                'group_leader' => 0,
+                'user_pending' => 0
+            );
 
-        insertData("user_group", $phpBBUserToGroup);
+            insertData(USER_GROUP_TABLE, $phpBBUserToGroup);
 
-        // ... and admin group.
-        $phpBBUserToGroup = array(
-            'group_id'     => 5,
-            'user_id'      => $wbbUser['userID'],
-            'group_leader' => 1,
-            'user_pending' => 0
-        );
+            // ... and admin group.
+            $phpBBUserToGroup = array(
+                'group_id'     => 5,
+                'user_id'      => $wbbUser['userID'],
+                'group_leader' => 1,
+                'user_pending' => 0
+            );
 
-        insertData("user_group", $phpBBUserToGroup);
+            insertData(USER_GROUP_TABLE, $phpBBUserToGroup);
+        }
     }
 
-    insertData("users", $phpBBUser);
+    insertData(USERS_TABLE, $phpBBUser);
 
     $phpBBUserWbbPassword = array(
         'user_id'  => $wbbUser['userID'],
         'password' => $wbbUser['password'],
         'salt'     => $wbbUser['salt'],
     );
-    insertData("users_wbb_passwords", $phpBBUserWbbPassword);
+    insertData(USERS_WBB_PASSWORDS_TABLE, $phpBBUserWbbPassword);
 
     // add user to user group
     $phpBBUserToGroup = array(
@@ -175,7 +188,7 @@ while($wbbUser = $wbbUsers->fetch_assoc())
         'user_pending' => 0
     );
 
-    insertData("user_group", $phpBBUserToGroup);
+    insertData(USER_GROUP_TABLE, $phpBBUserToGroup);
 
     output('row');
 }
@@ -187,16 +200,16 @@ $phpBBConfigUpdate  = array(
     'config_value'  => $wbbUser['userID'],
 );
 
-updateData('config', $phpBBConfigUpdate, "config_name = 'newest_user_id'");
+updateData(CONFIG_TABLE, $phpBBConfigUpdate, "config_name = 'newest_user_id'");
 
 $phpBBConfigUpdate  = array(
     'config_value'  => $phpBBDb->real_escape_string($wbbUser['username']),
 );
 
-updateData('config', $phpBBConfigUpdate, "config_name = 'newest_username'");
+updateData(CONFIG_TABLE, $phpBBConfigUpdate, "config_name = 'newest_username'");
 
-$phpBBDb->query("UPDATE {$phpBBMySQLConnection['prefix']}config SET
+$phpBBDb->query("UPDATE ".CONFIG_TABLE." SET
 config_value = (
-    SELECT COUNT(*) FROM {$phpBBMySQLConnection['prefix']}users
+    SELECT COUNT(*) FROM ".USERS_TABLE."
     WHERE user_type IN (".USER_FOUNDER.",".USER_NORMAL.")
 ) WHERE config_name = 'num_users';");

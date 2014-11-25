@@ -22,7 +22,7 @@ while($wbbPmFolder = $wbbPmFolders->fetch_assoc())
         'pm_count'    => isset($phpBBFoldersCount[$wbbPmFolder['folderID']]) ? $phpBBFoldersCount[$wbbPmFolder['folderID']] : 0,
     );
 
-    insertData("privmsgs_folder", $phpBBFolder);
+    insertData(PRIVMSGS_FOLDER_TABLE, $phpBBFolder);
 
     output('row');
 }

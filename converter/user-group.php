@@ -2,7 +2,7 @@
 
 // the first six user groups are wbb builtin groups. Just ignore them.
 
-$phpBBLastGroupId = reset($phpBBDb->query("SELECT MAX(group_id) FROM {$phpBBMySQLConnection['prefix']}groups;")->fetch_row());
+$phpBBLastGroupId = reset($phpBBDb->query("SELECT MAX(group_id) FROM ".GROUPS_TABLE.";")->fetch_row());
 $wbbUserGroups    = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_group WHERE groupID > 6;");
 
 while($wbbUserGroup = $wbbUserGroups->fetch_assoc())
@@ -14,7 +14,7 @@ while($wbbUserGroup = $wbbUserGroups->fetch_assoc())
         'rank_special' => 1,
     );
 
-    insertData("ranks", $phpBBUserRank);
+    insertData(RANKS_TABLE, $phpBBUserRank);
 
     $rankId    = $phpBBDb->insert_id;
 
@@ -35,7 +35,7 @@ while($wbbUserGroup = $wbbUserGroups->fetch_assoc())
         'group_rank'           => $rankId,
     );
 
-    insertData("groups", $phpBBUserGroup);
+    insertData(GROUPS_TABLE, $phpBBUserGroup);
 
     output('row');
 }

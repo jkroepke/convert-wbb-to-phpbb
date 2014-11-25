@@ -11,7 +11,7 @@ while($wbbUserBlackList = $wbbUserBlackLists->fetch_assoc())
         'foe'      => 1
     );
 
-    insertData("zebra", $phpBBUserBlackList);
+    insertData(ZEBRA_TABLE, $phpBBUserBlackList);
 
     output('row');
 }

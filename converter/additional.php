@@ -12,25 +12,24 @@ foreach($phpBBDefaultUsers as $phpBBUser)
     if($phpBBUser['user_type'] != USER_FOUNDER)
     {
         unset($phpBBUser['user_id']);
-        insertData('users', $phpBBUser);
+        insertData(USERS_TABLE, $phpBBUser);
         output('row');
     }
 }
 
-
 // Add and register custom auth method
-copy('files/auth_wbb_db.php', $phpBBPath.'includes/auth/auth_wbb_db.php');
-replaceInFile('includes/auth/auth_wbb_db.php', "define('ENCRYPTION_ENABLE_SALTING', 1);", "define('ENCRYPTION_ENABLE_SALTING', ".$wbbConfig['encryption_enable_salting'].");");
-replaceInFile('includes/auth/auth_wbb_db.php', "define('ENCRYPTION_ENCRYPT_BEFORE_SALTING', 1);", "define('ENCRYPTION_ENCRYPT_BEFORE_SALTING', ".$wbbConfig['encryption_encrypt_before_salting'].");");
-replaceInFile('includes/auth/auth_wbb_db.php', "define('ENCRYPTION_METHOD', 'sha1');", "define('ENCRYPTION_METHOD', '".$wbbConfig['encryption_method']."');");
-replaceInFile('includes/auth/auth_wbb_db.php', "define('ENCRYPTION_SALT_POSITION', 'before');", "define('ENCRYPTION_SALT_POSITION', '".$wbbConfig['encryption_salt_position']."');");
+copy(dirname(__FILE__).'files/auth_wbb_db.php', $phpBBPath.'includes/auth/auth_wbb_db.php');
+replaceInFile($phpBBPath.'includes/auth/auth_wbb_db.php', "define('ENCRYPTION_ENABLE_SALTING', 1);", "define('ENCRYPTION_ENABLE_SALTING', ".$wbbConfig['encryption_enable_salting'].");");
+replaceInFile($phpBBPath.'includes/auth/auth_wbb_db.php', "define('ENCRYPTION_ENCRYPT_BEFORE_SALTING', 1);", "define('ENCRYPTION_ENCRYPT_BEFORE_SALTING', ".$wbbConfig['encryption_encrypt_before_salting'].");");
+replaceInFile($phpBBPath.'includes/auth/auth_wbb_db.php', "define('ENCRYPTION_METHOD', 'sha1');", "define('ENCRYPTION_METHOD', '".$wbbConfig['encryption_method']."');");
+replaceInFile($phpBBPath.'includes/auth/auth_wbb_db.php', "define('ENCRYPTION_SALT_POSITION', 'before');", "define('ENCRYPTION_SALT_POSITION', '".$wbbConfig['encryption_salt_position']."');");
 
-replaceInFile('includes/constants.php', "// Additional tables", "// Additional tables\n\ndefine('USERS_WBB_PASSWORDS_TABLE',	\$table_prefix . 'users_wbb_passwords');");
+replaceInFile($phpBBPath.'includes/constants.php', "// Additional tables", "// Additional tables\n\ndefine('USERS_WBB_PASSWORDS_TABLE',	\$table_prefix . 'users_wbb_passwords');");
 
 $phpBBConfigUpdate  = array(
     'config_value'  => 'wbb_db',
 );
-updateData('config', $phpBBConfigUpdate, "config_name = 'auth_method'");
+updateData(CONFIG_TABLE, $phpBBConfigUpdate, "config_name = 'auth_method'");
 
 output('row');
 
@@ -43,7 +42,7 @@ if(empty($phpBBAnonymous))
 }
 
 $phpBBAnonymousId = reset($phpBBAnonymous->fetch_row());
-replaceInFile('includes/constants.php', "define('ANONYMOUS', ".ANONYMOUS.");", "define('ANONYMOUS', {$phpBBAnonymousId});");
+replaceInFile($phpBBPath.'includes/constants.php', "define('ANONYMOUS', ".ANONYMOUS.");", "define('ANONYMOUS', {$phpBBAnonymousId});");
 output('row');
 
 // Clear phpBB cache
@@ -51,10 +50,6 @@ array_map('unlink', glob($phpBBPath.'cache/*.php'));
 output('row');
 
 // BBCodes
-
-// get last bbcode id
-
-
 // Add align bbcode
 $bbCode = array(
 	'bbcode_id' 			=> 13,
@@ -69,7 +64,7 @@ $bbCode = array(
 	'second_pass_replace' 	=> $phpBBDb->real_escape_string('<div style="text-align:${1}">${2}</div>')
 );
 
-insertData('bbcodes', $bbCode);
+insertData(BBCODES_TABLE, $bbCode);
 output('row');
 
 // Add font bbcode
@@ -86,5 +81,5 @@ $bbCode = array(
 	'second_pass_replace'   => $phpBBDb->real_escape_string('<span style="font-family:${1}">${2}</span>')
 );
 
-insertData('bbcodes', $bbCode);
+insertData(BBCODES_TABLE, $bbCode);
 output('end');

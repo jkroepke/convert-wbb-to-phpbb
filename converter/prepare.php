@@ -6,10 +6,10 @@
  * Time: 19:49
  */
 
-$rootUser        = $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}users WHERE user_type = 3;")->fetch_assoc();
+$rootUser        = $phpBBDb->query("SELECT * FROM ".USERS_TABLE." WHERE user_type = 3;")->fetch_assoc();
 // save all users
 $phpBBDefaultUsers          = array();
-$phpBBDefaultUsersDbResult  = $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}users WHERE user_type = 2;");
+$phpBBDefaultUsersDbResult  = $phpBBDb->query("SELECT * FROM ".USERS_TABLE." WHERE user_type = 2;");
 while($user = $phpBBDefaultUsersDbResult->fetch_assoc())
 {
     $phpBBDefaultUsers[]    = $user;
@@ -17,41 +17,41 @@ while($user = $phpBBDefaultUsersDbResult->fetch_assoc())
 $phpBBDefaultUsersDbResult->close();
 output('row');
 
-// get default rights for category
+// get default rights
 $phpBBDefaultBoardACLs          = array();
-$phpBBDefaultBoardACLsDbResult  = $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}acl_groups WHERE forum_id = 1;");
+$phpBBDefaultBoardACLsDbResult  = $phpBBDb->query("SELECT * FROM ".ACL_GROUPS_TABLE." WHERE forum_id IN (1,2);");
 while($acl = $phpBBDefaultBoardACLsDbResult->fetch_assoc())
 {
-    $phpBBDefaultBoardACLs[FORUM_CAT][]    = $acl;
+    switch($acl['forum_id'])
+    {
+        case 1:
+            $phpBBDefaultBoardACLs[FORUM_CAT][]    = $acl;
+            break;
+        case 2:
+            $phpBBDefaultBoardACLs[FORUM_POST][]    = $acl;
+            break;
+    }
 }
 $phpBBDefaultBoardACLsDbResult->close();
 output('row');
-
-// get default rights for boards
-$phpBBDefaultBoardACLsDbResult  = $phpBBDb->query("SELECT * FROM {$phpBBMySQLConnection['prefix']}acl_groups WHERE forum_id = 2;");
-while($acl = $phpBBDefaultBoardACLsDbResult->fetch_assoc())
-{
-    $phpBBDefaultBoardACLs[FORUM_POST][]    = $acl;
-}
-$phpBBDefaultBoardACLsDbResult->close();
 
 $phpBBDefaultBoardACLs[FORUM_LINK] = $phpBBDefaultBoardACLs[FORUM_POST];
 output('row');
 
 // delete the admin and demo posts.
-$phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}acl_users;");
+$phpBBDb->query("TRUNCATE ".ACL_USERS_TABLE.";");
 output('row');
-$phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}topics_posted;");
+$phpBBDb->query("TRUNCATE ".TOPICS_POSTED_TABLE.";");
 output('row');
-$phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}topics;");
+$phpBBDb->query("TRUNCATE ".TOPICS_TABLE.";");
 output('row');
-$phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}forums;");
+$phpBBDb->query("TRUNCATE ".FORUMS_TABLE.";");
 output('row');
-$phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}posts;");
+$phpBBDb->query("TRUNCATE ".POSTS_TABLE.";");
 output('row');
-$phpBBDb->query("TRUNCATE {$phpBBMySQLConnection['prefix']}users;");
+$phpBBDb->query("TRUNCATE ".USERS_TABLE.";");
 output('row');
 
-$phpBBDb->query("DELETE FROM {$phpBBMySQLConnection['prefix']}acl_groups WHERE forum_id != 0;");
+$phpBBDb->query("DELETE FROM ".ACL_GROUPS_TABLE." WHERE forum_id != 0;");
 output('row');
 output('end');

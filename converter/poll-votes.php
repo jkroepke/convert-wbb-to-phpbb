@@ -6,10 +6,12 @@
  * Time: 23:50
  */
 
-$phpBBPollIdSql          = $phpBBDb->query("SELECT topic_first_post_id FROM {$phpBBMySQLConnection['prefix']}topics WHERE poll_start > 0;");
+$phpBBPollIdSql          = $phpBBDb->query("SELECT topic_first_post_id FROM ".TOPICS_TABLE." WHERE poll_start > 0;");
 $phpBBPollIds            = array();
 while ($phpBBPollId = $phpBBPollIdSql->fetch_assoc())
+{
     $phpBBPollIds[] = $phpBBPollId['topic_first_post_id'];
+}
 
 if(!empty($phpBBPollIds))
 {
@@ -29,7 +31,7 @@ if(!empty($phpBBPollIds))
             'vote_user_ip'      => $wbbPollOption['ipAddress']
         );
 
-        insertData('poll_votes', $phpBBPollOptions);
+        insertData(POLL_VOTES_TABLE, $phpBBPollOptions);
 
         output('row');
     }
