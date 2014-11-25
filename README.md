@@ -124,5 +124,5 @@ You should have received a copy of the GNU General Public License along with thi
 [GNU General Public License, version 3]:http://www.gnu.org/licenses/gpl-3.0.html
 [config.php]:https://github.com/jkroepke/convert-wbb-to-phpbb/blob/master/config.php
 [phpBB Support Toolkit]:https://www.phpbb.com/support/stk/
-[phpBB 3.0.12 Deutsch]:http://downloads.phpbb.de/pakete/3.0.12/phpBB-3.0.12-deutsch.zip
+[phpBB 3.0.12 Deutsch]:http://downloads.phpbb.de/pakete/deutsch/3.0/3.0.12/phpBB-3.0.12-deutsch.zip
 [phpBB 3.0.12]:https://www.phpbb.com/files/release/phpBB-3.0.12.zip

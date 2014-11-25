@@ -25,7 +25,7 @@ $startTime = microtime(true);
  * topics subscription
  * posts
  * polls
- * TODO: bbcodes
+ * bbcodes
  *
  * Polls: Note that only polls placed in the first post of every topic will be converted.
  *

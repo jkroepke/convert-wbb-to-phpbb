@@ -197,6 +197,6 @@ updateData('config', $phpBBConfigUpdate, "config_name = 'newest_username'");
 
 $phpBBDb->query("UPDATE {$phpBBMySQLConnection['prefix']}config SET
 config_value = (
-    SELECT COUNT(*) FROM {$phpBBMySQLConnection['prefix']}user
+    SELECT COUNT(*) FROM {$phpBBMySQLConnection['prefix']}users
     WHERE user_type IN (".USER_FOUNDER.",".USER_NORMAL.")
 ) WHERE config_name = 'num_users';");
