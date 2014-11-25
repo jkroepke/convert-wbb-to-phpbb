@@ -1,6 +1,6 @@
 <?php
 
-$wbbAvatars    = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_avatar;");
+$wbbAvatars    = $wbbDb->query("SELECT * FROM ".PREFIX_WCF."_avatar;");
 
 while($wbbAvatar = $wbbAvatars->fetch_assoc())
 {

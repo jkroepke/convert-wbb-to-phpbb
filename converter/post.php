@@ -1,7 +1,7 @@
 <?php
 
-$wbbPosts = $wbbDb->query("SELECT wbbp.*, wbbt.boardID FROM wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp
-    INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread wbbt USING (threadID)
+$wbbPosts = $wbbDb->query("SELECT wbbp.*, wbbt.boardID FROM ".PREFIX_WBB."_post wbbp
+    INNER JOIN ".PREFIX_WBB."_thread wbbt USING (threadID)
     WHERE wbbp.deleteTime = 0;");
 
 $topicUserData  = array();

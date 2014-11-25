@@ -11,7 +11,7 @@ while($folder = $mysqlFoldersCount->fetch_assoc())
 
 $mysqlFoldersCount->close();
 
-$wbbPmFolders      = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_pm_folder;");
+$wbbPmFolders      = $wbbDb->query("SELECT * FROM ".PREFIX_WCF."_pm_folder;");
 
 while($wbbPmFolder = $wbbPmFolders->fetch_assoc())
 {

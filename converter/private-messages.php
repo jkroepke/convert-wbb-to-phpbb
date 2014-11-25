@@ -1,7 +1,7 @@
 <?php
 
 $wbbPmUser  = array();
-$wbbPmUsers = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_pm_to_user;");
+$wbbPmUsers = $wbbDb->query("SELECT * FROM ".PREFIX_WCF."_pm_to_user;");
 
 while($pmUser = $wbbPmUsers->fetch_assoc())
 {
@@ -10,7 +10,7 @@ while($pmUser = $wbbPmUsers->fetch_assoc())
 
 $wbbPmUsers->close();
 
-$wbbPms        = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_pm;");
+$wbbPms        = $wbbDb->query("SELECT * FROM ".PREFIX_WCF."_pm;");
 
 while($wbbPm = $wbbPms->fetch_assoc())
 {

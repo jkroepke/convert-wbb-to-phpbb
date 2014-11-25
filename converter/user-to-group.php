@@ -1,7 +1,7 @@
 <?php
 
-$wbbUserToGroups    = $wbbDb->query("SELECT ug.*,leaderUserID FROM wcf{$wbbMySQLConnection['wbbNum']}_user_to_groups ug
-    LEFT JOIN wcf{$wbbMySQLConnection['wbbNum']}_group_leader gl
+$wbbUserToGroups    = $wbbDb->query("SELECT ug.*,leaderUserID FROM ".PREFIX_WCF."_user_to_groups ug
+    LEFT JOIN ".PREFIX_WCF."_group_leader gl
         ON userID = leaderUserID AND ug.groupID = gl.groupID
     WHERE ug.groupID > 6;");
 

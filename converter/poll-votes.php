@@ -17,9 +17,9 @@ if(!empty($phpBBPollIds))
 {
 
     $wbbPollVotes     = $wbbDb->query("SELECT wcfpov.*, wbbp.threadID
-    FROM wcf{$wbbMySQLConnection['wbbNum']}_poll_option_vote wcfpov
-    INNER JOIN wcf{$wbbMySQLConnection['wbbNum']}_poll wcfp ON wcfpov.pollID = wcfp.pollID
-    INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp ON wcfp.messageID = wbbp.postID
+    FROM ".PREFIX_WCF."_poll_option_vote wcfpov
+    INNER JOIN ".PREFIX_WCF."_poll wcfp ON wcfpov.pollID = wcfp.pollID
+    INNER JOIN ".PREFIX_WBB."_post wbbp ON wcfp.messageID = wbbp.postID
     WHERE wbbp.postID IN (".implode(',',$phpBBPollIds).");");
 
     while ($wbbPollOption = $wbbPollVotes ->fetch_assoc())

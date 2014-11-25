@@ -3,11 +3,11 @@
 $wbbBoards = $wbbDb->query("SELECT wbbb.*, wbbs.position,
 wbbp.postID as lastPostID, wbbp.subject as lastPostSubject, wbbp.time as lastPostTime,
 wbbu.userID as lastPosterID, wbbu.username as lastPosterName, wbbu.email as lastPosterMail
-FROM wbb{$wbbMySQLConnection['wbbNum']}_1_board wbbb
-INNER JOIN `wbb{$wbbMySQLConnection['wbbNum']}_1_board_structure` wbbs USING(boardID)
-LEFT JOIN `wbb{$wbbMySQLConnection['wbbNum']}_1_board_last_post` wbblp USING(boardID)
-LEFT JOIN `wbb{$wbbMySQLConnection['wbbNum']}_1_post` wbbp USING(threadID)
-LEFT JOIN `wcf{$wbbMySQLConnection['wbbNum']}_user` wbbu USING(userID)
+FROM ".PREFIX_WBB."_board wbbb
+INNER JOIN `".PREFIX_WBB."_board_structure` wbbs USING(boardID)
+LEFT JOIN `".PREFIX_WBB."_board_last_post` wbblp USING(boardID)
+LEFT JOIN `".PREFIX_WBB."_post` wbbp USING(threadID)
+LEFT JOIN `".PREFIX_WCF."_user` wbbu USING(userID)
 GROUP BY wbbb.boardID
 ORDER BY wbblp.languageID ASC, wbbp.postID DESC;");
 

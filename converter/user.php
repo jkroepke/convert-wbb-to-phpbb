@@ -10,7 +10,7 @@ $phpBBDb->query("CREATE TABLE `".USERS_WBB_PASSWORDS_TABLE."` (
 ) ENGINE=InnoDB;");
 
 // If the wbb has non dafault optionIDs, we can ask them here.
-$wbbUserOptions = $wbbDb->query("SELECT optionID,optionName FROM wcf{$wbbMySQLConnection['wbbNum']}_user_option
+$wbbUserOptions = $wbbDb->query("SELECT optionID,optionName FROM ".PREFIX_WCF."_user_option
     WHERE optionName IN
     ('birthday','aboutMe','enableDaylightSavingTime','timezone','location','homepage','icq','aim','jabber','msn','yim');");
 
@@ -23,17 +23,17 @@ while($option = $wbbUserOptions->fetch_assoc())
 $wbbUserOptions->close();
 
 $wbbUsers = $wbbDb->query("SELECT wcfu.*, boardLastMarkAllAsReadTime, boardLastActivityTime, ".implode(', ', $wbbUserOptionNames)."
-    FROM wcf{$wbbMySQLConnection['wbbNum']}_user wcfu
-    INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_user wbbu USING (userID)
-    INNER JOIN wcf{$wbbMySQLConnection['wbbNum']}_user_option_value USING (userID);");
+    FROM ".PREFIX_WCF."_user wcfu
+    INNER JOIN ".PREFIX_WBB."_user wbbu USING (userID)
+    INNER JOIN ".PREFIX_WCF."_user_option_value USING (userID);");
 
 $adminAvailable = reset($wbbDb->query("SELECT COUNT(*)
-    FROM wcf{$wbbMySQLConnection['wbbNum']}_user
+    FROM ".PREFIX_WCF."_user
     WHERE email = ".$phpBBDb->real_escape_string($rootUser['user_email']).";")->fetch_row());
 
 if(empty($adminAvailable))
 {
-    $lowestUser = reset($wbbDb->query("SELECT LEAST(userID) FROM wcf{$wbbMySQLConnection['wbbNum']}_user;")->fetch_row());
+    $lowestUser = reset($wbbDb->query("SELECT LEAST(userID) FROM ".PREFIX_WCF."_user;")->fetch_row());
 }
 
 $adminFound = false;

@@ -7,9 +7,9 @@
  */
 
 $wbbPolls    = $wbbDb->query("SELECT wcfp.*, wbbp.threadID
-    FROM wcf{$wbbMySQLConnection['wbbNum']}_poll wcfp
-    INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_post wbbp ON wcfp.messageID = wbbp.postID AND wbbp.deleteTime = 0
-    INNER JOIN wbb{$wbbMySQLConnection['wbbNum']}_1_thread wbbt ON wbbp.postID = wbbt.firstPostID
+    FROM ".PREFIX_WCF."_poll wcfp
+    INNER JOIN ".PREFIX_WBB."_post wbbp ON wcfp.messageID = wbbp.postID AND wbbp.deleteTime = 0
+    INNER JOIN ".PREFIX_WBB."_thread wbbt ON wbbp.postID = wbbt.firstPostID
     WHERE wcfp.messageType = 'post';");
 
 while($wbbPoll = $wbbPolls->fetch_assoc())

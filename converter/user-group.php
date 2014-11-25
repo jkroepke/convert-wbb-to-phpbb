@@ -3,7 +3,7 @@
 // the first six user groups are wbb builtin groups. Just ignore them.
 
 $phpBBLastGroupId = reset($phpBBDb->query("SELECT MAX(group_id) FROM ".GROUPS_TABLE.";")->fetch_row());
-$wbbUserGroups    = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_group WHERE groupID > 6;");
+$wbbUserGroups    = $wbbDb->query("SELECT * FROM ".PREFIX_WCF."_group WHERE groupID > 6;");
 
 while($wbbUserGroup = $wbbUserGroups->fetch_assoc())
 {

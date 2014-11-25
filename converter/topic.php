@@ -6,12 +6,12 @@ LEAST(COUNT(wbbta.boardID), 1) as isGlobal,
 wbbp.postID as lastPostID, wbbp.subject as lastPostSubject,
 wbblu.email as lastPosterMail,
 wbbfu.email as firstPosterMail
-FROM `wbb{$wbbMySQLConnection['wbbNum']}_1_thread` wbbt
-LEFT JOIN `wbb{$wbbMySQLConnection['wbbNum']}_1_thread_announcement` wbbta USING(threadID)
-LEFT JOIN `wbb{$wbbMySQLConnection['wbbNum']}_1_thread_visit` wbbtv USING(threadID)
-LEFT JOIN `wbb{$wbbMySQLConnection['wbbNum']}_1_post` wbbp USING(threadID)
-LEFT JOIN `wcf{$wbbMySQLConnection['wbbNum']}_user` wbbfu ON wbbt.userID = wbbfu.userID
-LEFT JOIN `wcf{$wbbMySQLConnection['wbbNum']}_user` wbblu ON wbbt.lastPosterID = wbblu.userID
+FROM `".PREFIX_WBB."_thread` wbbt
+LEFT JOIN `".PREFIX_WBB."_thread_announcement` wbbta USING(threadID)
+LEFT JOIN `".PREFIX_WBB."_thread_visit` wbbtv USING(threadID)
+LEFT JOIN `".PREFIX_WBB."_post` wbbp USING(threadID)
+LEFT JOIN `".PREFIX_WCF."_user` wbbfu ON wbbt.userID = wbbfu.userID
+LEFT JOIN `".PREFIX_WCF."_user` wbblu ON wbbt.lastPosterID = wbblu.userID
 WHERE wbbt.deleteTime = 0
 GROUP BY wbbt.threadID
 ORDER BY wbbp.postID DESC;");

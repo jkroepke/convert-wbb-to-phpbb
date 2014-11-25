@@ -99,13 +99,23 @@ require $phpBBPath.'includes/functions.php';
 require $phpBBPath.'includes/functions_convert.php';
 require $phpBBPath.'includes/functions_content.php';
 
+require $wbbPath.'config.inc.php';
+
 $table_prefix = $phpBBMySQLConnection['prefix'];
 require $phpBBPath.'includes/constants.php';
 define('USERS_WBB_PASSWORDS_TABLE', $table_prefix.'users_wbb_passwords');
 
+define('PREFIX_WCF', "wcf".$wbbMySQLConnection['wcfNum']);
+define('PREFIX_WBB', "wbb".$wbbMySQLConnection['wbbNum']);
+
 if(!in_array(PHPBB_VERSION, array('3.0.12')))
 {
     throw new Exception('phpBB version must be 3.0.12!');
+}
+
+if(!in_array(PACKAGE_VERSION, array('3.1.7', '3.1.8')))
+{
+    throw new Exception('WBB version must be 3.1.7 or greater!');
 }
 
 $wbbDb   = new myMysqli($wbbMySQLConnection['host'], $wbbMySQLConnection['user'],
@@ -134,7 +144,7 @@ $phpBBDb->set_charset("utf8");
 
 
 // get the wbb config.
-$wbbConfigResult = $wbbDb->query("SELECT optionName, optionValue FROM wcf{$wbbMySQLConnection['wbbNum']}_option;");
+$wbbConfigResult = $wbbDb->query("SELECT optionName, optionValue FROM ".PREFIX_WCF."_option;");
 $wbbConfig       = array();
 while($configRow = $wbbConfigResult->fetch_assoc())
 {

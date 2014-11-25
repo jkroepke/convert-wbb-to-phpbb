@@ -1,6 +1,6 @@
 <?php
 
-$wbbUserFriends = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_user_whitelist;");
+$wbbUserFriends = $wbbDb->query("SELECT * FROM ".PREFIX_WCF."_user_whitelist;");
 
 while($wbbUserFriend = $wbbUserFriends->fetch_assoc())
 {

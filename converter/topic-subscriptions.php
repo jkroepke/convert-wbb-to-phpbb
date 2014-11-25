@@ -6,7 +6,7 @@
  * Time: 23:45
  */
 
-$wbbThreadSubscriptions = $wbbDb->query("SELECT * FROM wbb{$wbbMySQLConnection['wbbNum']}_1_thread_subscription;");
+$wbbThreadSubscriptions = $wbbDb->query("SELECT * FROM ".PREFIX_WBB."_thread_subscription;");
 
 while($wbbThreadSubscription = $wbbThreadSubscriptions->fetch_assoc())
 {

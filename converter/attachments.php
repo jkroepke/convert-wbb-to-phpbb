@@ -1,6 +1,6 @@
 <?php
 
-$wbbAttachments    = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_attachment;");
+$wbbAttachments    = $wbbDb->query("SELECT * FROM ".PREFIX_WCF."_attachment;");
 
 while($wbbAttachment = $wbbAttachments->fetch_assoc())
 {

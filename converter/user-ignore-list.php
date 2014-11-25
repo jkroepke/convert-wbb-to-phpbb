@@ -1,6 +1,6 @@
 <?php
 
-$wbbUserBlackLists = $wbbDb->query("SELECT * FROM wcf{$wbbMySQLConnection['wbbNum']}_user_blacklist;");
+$wbbUserBlackLists = $wbbDb->query("SELECT * FROM ".PREFIX_WCF."_user_blacklist;");
 
 while($wbbUserBlackList = $wbbUserBlackLists->fetch_assoc())
 {
