@@ -56,7 +56,7 @@ class wbb_converter extends \phpbb\auth\provider\db
 
             // value
             if (!defined('ENCRYPTION_ENCRYPT_BEFORE_SALTING') || ENCRYPTION_ENCRYPT_BEFORE_SALTING) {
-                $hash .= encrypt($value);
+                $hash .= $this->encrypt($value);
             }
             else {
                 $hash .= $value;
@@ -67,10 +67,10 @@ class wbb_converter extends \phpbb\auth\provider\db
                 $hash .= $salt;
             }
 
-            return encrypt($hash);
+            return $this->encrypt($hash);
         }
         else {
-            return encrypt($value);
+            return $this->encrypt($value);
         }
     }
 
@@ -82,7 +82,7 @@ class wbb_converter extends \phpbb\auth\provider\db
      * @return 	string 		$hash
      */
     private function getDoubleSaltedHash($value, $salt) {
-        return encrypt($salt . getSaltedHash($value, $salt));
+        return $this->encrypt($salt . $this->getSaltedHash($value, $salt));
     }
 
     /**
