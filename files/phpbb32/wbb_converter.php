@@ -4,11 +4,11 @@ namespace phpbb\auth\provider;
 
 class wbb_converter extends \phpbb\auth\provider\db
 {
-	/**
-	 * {@inheritdoc}
-	 */
-	public function login($username, $password)
-	{
+    /**
+     * {@inheritdoc}
+     */
+    public function login($username, $password)
+    {
         $username_clean = utf8_clean_string($username);
 
         $sql = 'SELECT wbbpw.* FROM ' . USERS_TABLE . "
@@ -35,8 +35,8 @@ class wbb_converter extends \phpbb\auth\provider\db
         }
 
 
-	    return parent::login($username, $password);
-	}
+        return parent::login($username, $password);
+    }
 
 
     /**
