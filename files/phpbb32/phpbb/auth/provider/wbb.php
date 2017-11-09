@@ -2,7 +2,7 @@
 
 namespace phpbb\auth\provider;
 
-class wbb_converter extends \phpbb\auth\provider\db
+class wbb extends \phpbb\auth\provider\db
 {
     /**
      * {@inheritdoc}
