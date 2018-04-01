@@ -111,11 +111,11 @@ Supported convertion actions:
     * remove duplicate permissions
     * sanitise anonymous user
 
-# Upgrade to phpbb 3.2
+## Upgrade to phpbb 3.2
 If want to upgrade you phpbb, you must use the provided auth help from files/phpbb32/wbb_converter.php
 
 
-#convert-wbb-to-phpbb License
+## convert-wbb-to-phpbb License
 
 convert-wbb-to-phpbb is released under [GNU General Public License, version 3].
 
