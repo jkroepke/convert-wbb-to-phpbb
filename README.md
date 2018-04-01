@@ -111,7 +111,11 @@ Supported convertion actions:
     * remove duplicate permissions
     * sanitise anonymous user
 
-#convert-wbb-to-phpbb License
+## Upgrade to phpbb 3.2
+If want to upgrade you phpbb 3.2. You have to convert your board to phpbb 3.0, then upgrade you board with the phpbb provided tools. After that, you must copy the files from `files/phpbb32`to your instance.
+
+
+## convert-wbb-to-phpbb License
 
 convert-wbb-to-phpbb is released under [GNU General Public License, version 3].
 

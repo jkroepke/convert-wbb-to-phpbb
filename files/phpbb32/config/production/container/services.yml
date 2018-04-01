@@ -1,0 +1,17 @@
+imports:
+    - { resource: ../../default/container/services.yml }
+
+services:
+    auth.provider.wbb:
+        class: phpbb\auth\provider\wbb
+        arguments:
+            - '@dbal.conn'
+            - '@config'
+            - '@passwords.manager'
+            - '@request'
+            - '@user'
+            - '@service_container'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: auth.provider }

@@ -18,7 +18,7 @@ foreach($phpBBDefaultUsers as $phpBBUser)
 }
 
 // Add and register custom auth method
-copy(dirname(__FILE__).'files/auth_wbb_db.php', $phpBBPath.'includes/auth/auth_wbb_db.php');
+copy(dirname(__FILE__).'files/phpbb30/auth_wbb_db.php', $phpBBPath.'includes/auth/auth_wbb_db.php');
 replaceInFile($phpBBPath.'includes/auth/auth_wbb_db.php', "define('ENCRYPTION_ENABLE_SALTING', 1);", "define('ENCRYPTION_ENABLE_SALTING', ".$wbbConfig['encryption_enable_salting'].");");
 replaceInFile($phpBBPath.'includes/auth/auth_wbb_db.php', "define('ENCRYPTION_ENCRYPT_BEFORE_SALTING', 1);", "define('ENCRYPTION_ENCRYPT_BEFORE_SALTING', ".$wbbConfig['encryption_encrypt_before_salting'].");");
 replaceInFile($phpBBPath.'includes/auth/auth_wbb_db.php', "define('ENCRYPTION_METHOD', 'sha1');", "define('ENCRYPTION_METHOD', '".$wbbConfig['encryption_method']."');");
