@@ -112,7 +112,7 @@ Supported convertion actions:
     * sanitise anonymous user
 
 ## Upgrade to phpbb 3.2
-If want to upgrade you phpbb, you must use the provided auth help from files/phpbb32/wbb_converter.php
+If want to upgrade you phpbb 3.2. You have to convert your board to phpbb 3.0, then upgrade you board with the phpbb provided tools. After that, you must copy the files from `files/phpbb32`to your instance.
 
 
 ## convert-wbb-to-phpbb License
